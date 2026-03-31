@@ -1,0 +1,64 @@
+ <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClinicOS — Dashboard</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:Arial,sans-serif; background:#1A110A; color:#F5E6D0; min-height:100vh; }
+.topbar { background:#2C1E14; border-bottom:1px solid rgba(196,158,110,0.2); padding:16px 32px; display:flex; align-items:center; justify-content:space-between; }
+.logo { font-size:1.4rem; font-weight:900; color:white; }
+.logo span { color:#C0664A; }
+.user-info { display:flex; align-items:center; gap:12px; }
+.clinica-nome { font-size:.9rem; color:rgba(245,230,208,0.7); }
+.btn-sair { background:transparent; border:1px solid rgba(196,158,110,0.3); color:rgba(245,230,208,0.5); padding:7px 16px; border-radius:8px; cursor:pointer; font-size:.8rem; font-family:Arial,sans-serif; transition:all .2s; }
+.btn-sair:hover { border-color:#C0664A; color:#C0664A; }
+.content { padding:40px 32px; max-width:1100px; margin:0 auto; }
+.welcome { margin-bottom:32px; }
+.welcome h1 { font-size:1.8rem; font-weight:700; margin-bottom:6px; }
+.welcome p { color:rgba(245,230,208,0.5); }
+.cards { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:32px; }
+.card { background:#2C1E14; border:1px solid rgba(196,158,110,0.15); border-radius:16px; padding:24px; cursor:pointer; transition:all .3s; }
+.card:hover { border-color:#C0664A; transform:translateY(-3px); }
+.card-icon { font-size:2rem; margin-bottom:12px; }
+.card-title { font-size:1rem; font-weight:700; margin-bottom:6px; }
+.card-desc { font-size:.82rem; color:rgba(245,230,208,0.5); line-height:1.5; }
+.soon { opacity:.4; cursor:not-allowed; }
+.soon:hover { transform:none; border-color:rgba(196,158,110,0.15); }
+.badge { display:inline-block; background:#C0664A; color:white; font-size:.6rem; font-weight:700; padding:2px 7px; border-radius:20px; margin-left:6px; vertical-align:middle; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">Clinic<span>OS</span></div>
+  <div class="user-info">
+    <div class="clinica-nome" id="clinicaNome">Carregando...</div>
+    <button class="btn-sair" onclick="sair()">Sair</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="welcome">
+    <h1 id="welcomeMsg">Bem-vindo! 👋</h1>
+    <p>Selecione o módulo que deseja acessar</p>
+  </div>
+
+  <div class="cards">
+    <div class="card" onclick="alert('Em breve! Estamos construindo.')">
+      <div class="card-icon">📅</div>
+      <div class="card-title">Agenda <span class="badge">Em breve</span></div>
+      <div class="card-desc">Gerencie consultas e horários com confirmação automática pelo WhatsApp</div>
+    </div>
+    <div class="card" onclick="alert('Em breve! Estamos construindo.')">
+      <div class="card-icon">👥</div>
+      <div class="card-title">Pacientes <span class="badge">Em breve</span></div>
+      <div class="card-desc">Cadastro completo de pacientes com anamnese e ficha clínica digital</div>
+    </div>
+    <div class="card" onclick="alert('Em breve! Estamos construindo.')">
+      <div class="card-icon">🦷</div>
+      <div class="card-title">Ficha Clínica <span class="badge">Em breve</span></div>
+      <div class="card-desc">Odontograma, mapa corporal e prontuário digital por especialidade</div>
+    </div>
+    <div class="card" onclick="
