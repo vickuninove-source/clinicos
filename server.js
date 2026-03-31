@@ -18,12 +18,5 @@ app.get('/dashboard', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`✅ ClinicOS rodando em http://localhost:${PORT}`);
+  console.log('ClinicOS rodando na porta ' + PORT);
 });
-```
-
-**Ctrl + S** para salvar. Depois no terminal digita:
-```
-git add .
-git commit -m "adiciona login e dashboard"
-git push
