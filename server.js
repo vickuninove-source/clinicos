@@ -1,29 +1,9 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));
-});
-
-app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
-});
-
+app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'public', 'index.html')); });
+app.get('/login', (req, res) => { res.sendFile(path.join(__dirname, 'public', 'login.html')); });
+app.get('/dashboard', (req, res) => { res.sendFile(path.join(__dirname, 'public', 'dashboard.html')); });
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log('ClinicOS rodando na porta ' + PORT);
-});
-```
-
-**Ctrl + S**, depois no terminal:
-```
-git add .
-git commit -m "fix porta"
-git push
+app.listen(PORT, '0.0.0.0', () => { console.log('rodando ' + PORT); });
