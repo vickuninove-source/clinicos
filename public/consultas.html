@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClinicOS — Consultas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0d12; --surface: #111520; --surface2: #161c2b;
+      --border: #1e2535; --accent: #4fd1c5; --accent2: #38bdf8;
+      --text: #e2e8f0; --muted: #64748b; --error: #f87171; --success: #4ade80;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; display: flex; }
+    .sidebar { width: 240px; min-height: 100vh; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 24px 16px; position: fixed; top: 0; left: 0; bottom: 0; }
+    .logo { display: flex; align-items: center; gap: 10px; padding: 8px 12px; margin-bottom: 32px; }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .logo-text { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; }
+    .logo-text span { color: var(--accent); }
+    nav { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .nav-section { font-size: 10px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; padding: 16px 12px 8px; }
+    .nav-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: var(--muted); text-decoration: none; font-size: 14px; transition: all 0.15s; }
+    .nav-link:hover { background: var(--surface2); color: var(--text); }
+    .nav-link.active { background: rgba(79,209,197,0.1); color: var(--accent); }
+    .nav-link .icon { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-footer { border-top: 1px solid var(--border); padding-top: 16px; margin-top: 16px; }
+    .clinica-info { padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+    .avatar { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #0a0d12; flex-shrink: 0; }
+    .clinica-nome { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .clinica-plano { font-size: 11px; color: var(--muted); }
+    .btn-logout { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: var(--muted); background: none; border: none; font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; transition: all 0.15s; width: 100%; }
+    .btn-logout:hover { background: rgba(248,113,113,0.1); color: var(--error); }
+    .main { margin-left: 240px; flex: 1; padding: 32px 36px; }
+    .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+    .page-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 600; }
+    .page-subtitle { font-size: 14px; color: var(--muted); margin-top: 2px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; border-radius: 10px; color: #0a0d12; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.2s, transform 0.1s; }
+    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: none; }
+    .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: var(--surface2); }
+    th { padding: 12px 20px; text-align: left; font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+    td { padding: 14px 20px; font-size: 14px; border-top: 1px solid var(--border); }
+    tr:hover td { background: var(--surface2); }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+    .badge-agendada { background: rgba(56,189,248,0.1); color: var(--accent2); }
+    .badge-realizada { background: rgba(74,222,128,0.1); color: var(--success); }
+    .badge-cancelada { background: rgba(248,113,113,0.1); color: var(--error); }
+    .empty { text-align: center; padding: 48px; color: var(--muted); font-size: 14px; }
+    .empty-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.4; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 36px; width: 100%; max-width: 440px; transform: translateY(16px); transition: transform 0.2s; }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; margin-bottom: 24px; }
+    .form { display: flex; flex-direction: column; gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    label { font-size: 12px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+    input, select { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 11px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; width: 100%; }
+    input:focus, select:focus { border-color: var(--accent); }
+    input::placeholder { color: var(--muted); }
+    select option { background: var(--surface); }
+    .modal-footer { display: flex; gap: 10px; margin-top: 24px; justify-content: flex-end; }
+    .msg { font-size: 13px; padding: 10px 14px; border-radius: 8px; margin-top: 8px; }
+    .msg.error { background: rgba(248,113,113,0.1); color: var(--error); border: 1px solid rgba(248,113,113,0.2); }
+    .msg.success { background: rgba(74,222,128,0.1); color: var(--success); border: 1px solid rgba(74,222,128,0.2); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">🦷</div>
+    <div class="logo-text">Clinic<span>OS</span></div>
+  </div>
+  <nav>
+    <div class="nav-section">Principal</div>
+    <a class="nav-link" href="/dashboard.html"><span class="icon">◈</span> Dashboard</a>
+    <a class="nav-link" href="/pacientes.html"><span class="icon">◉</span> Pacientes</a>
+    <a class="nav-link active" href="/consultas.html"><span class="icon">◷</span> Consultas</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="clinica-info">
+      <div class="avatar" id="avatar">C</div>
+      <div>
+        <div class="clinica-nome" id="clinica-nome">Clínica</div>
+        <div class="clinica-plano" id="clinica-plano">starter</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="logout()"><span>⎋</span> Sair</button>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Consultas</div>
+      <div class="page-subtitle">Agendamentos da sua clínica</div>
+    </div>
+    <button class="btn" onclick="abrirModal()">+ Nova consulta</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Paciente</th>
+          <th>Data / Hora</th>
+          <th>Procedimento</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="4" class="empty"><div class="empty-icon">◷</div>Carregando...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title">Nova Consulta</div>
+    <div class="form">
+      <div class="field">
+        <label>Paciente</label>
+        <select id="c-paciente">
+          <option value="">Selecione um paciente...</option>
+        </select>
+      </div>
+      <div class="field"><label>Data e hora</label><input type="datetime-local" id="c-data" /></div>
+      <div class="field"><label>Procedimento</label><input type="text" id="c-proc" placeholder="Ex: Limpeza, Consulta, Raio-X..." /></div>
+      <div id="modal-msg"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
+      <button class="btn" onclick="salvarConsulta()" id="btn-salvar">Agendar consulta</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = 'https://clinicos-backend-production-68fe.up.railway.app';
+  const token = localStorage.getItem('token');
+  if (!token) window.location.href = '/login.html';
+
+  const clinica = JSON.parse(localStorage.getItem('clinica') || '{}');
+  document.getElementById('clinica-nome').textContent = clinica.nome || 'Clínica';
+  document.getElementById('clinica-plano').textContent = 'Plano ' + (clinica.plano || 'starter');
+  document.getElementById('avatar').textContent = (clinica.nome || 'C')[0].toUpperCase();
+
+  function logout() { localStorage.clear(); window.location.href = '/login.html'; }
+
+  async function apiFetch(path) {
+    const res = await fetch(API + path, { headers: { Authorization: 'Bearer ' + token } });
+    if (res.status === 401) { logout(); return null; }
+    return res.json();
+  }
+
+  async function carregar() {
+    const [consultas, pacientes] = await Promise.all([
+      apiFetch('/api/consultas'),
+      apiFetch('/api/pacientes')
+    ]);
+
+    if (pacientes) {
+      const sel = document.getElementById('c-paciente');
+      sel.innerHTML = '<option value="">Selecione um paciente...</option>' +
+        pacientes.map(p => `<option value="${p.id}">${p.nome}</option>`).join('');
+    }
+
+    if (consultas) renderizar(consultas);
+  }
+
+  function renderizar(lista) {
+    const tbody = document.getElementById('tbody');
+    if (!lista.length) {
+      tbody.innerHTML = `<tr><td colspan="4" class="empty"><div class="empty-icon">◷</div>Nenhuma consulta registrada</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = lista.map(c => {
+      const dt = new Date(c.data_hora);
+      const dataFmt = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+      const badge = `badge-${c.status || 'agendada'}`;
+      return `<tr style="animation: fadeUp 0.3s ease forwards; opacity:0">
+        <td>${c.paciente_nome || '—'}</td>
+        <td>${dataFmt}</td>
+        <td>${c.procedimento || '—'}</td>
+        <td><span class="badge ${badge}">${c.status || 'agendada'}</span></td>
+      </tr>`;
+    }).join('');
+  }
+
+  function abrirModal() { document.getElementById('modal').classList.add('open'); }
+  function fecharModal() { document.getElementById('modal').classList.remove('open'); document.getElementById('modal-msg').innerHTML = ''; }
+
+  async function salvarConsulta() {
+    const btn = document.getElementById('btn-salvar');
+    const paciente_id = document.getElementById('c-paciente').value;
+    const data_hora = document.getElementById('c-data').value;
+    if (!paciente_id) { showModalMsg('Selecione um paciente', 'error'); return; }
+    if (!data_hora) { showModalMsg('Informe a data e hora', 'error'); return; }
+    btn.disabled = true; btn.textContent = 'Agendando...';
+    try {
+      const res = await fetch(`${API}/api/consultas`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        body: JSON.stringify({
+          paciente_id: parseInt(paciente_id),
+          data_hora,
+          procedimento: document.getElementById('c-proc').value
+        })
+      });
+      if (!res.ok) throw new Error('Erro ao agendar');
+      fecharModal();
+      ['c-paciente','c-data','c-proc'].forEach(id => document.getElementById(id).value = '');
+      await carregar();
+    } catch (err) {
+      showModalMsg(err.message, 'error');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Agendar consulta';
+    }
+  }
+
+  function showModalMsg(text, type) {
+    document.getElementById('modal-msg').innerHTML = `<div class="msg ${type}">${text}</div>`;
+  }
+
+  document.getElementById('modal').addEventListener('click', e => { if (e.target === e.currentTarget) fecharModal(); });
+
+  carregar();
+</script>
+</body>
+</html>
