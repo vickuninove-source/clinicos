@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>ClinicOS — Orçamentos</title>
+<title>ClinicOS — Usuários</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -87,11 +87,11 @@ textarea{resize:vertical;min-height:70px}
 <a class="nav-link" href="/pacientes.html"><span class="nav-icon">◉</span>Pacientes</a>
 <a class="nav-link" href="/consultas.html"><span class="nav-icon">◷</span>Consultas</a>
 <a class="nav-link" href="/procedimentos.html"><span class="nav-icon">✦</span>Procedimentos</a>
-<a class="nav-link active" href="/orcamentos.html"><span class="nav-icon">◎</span>Orçamentos</a>
+<a class="nav-link" href="/orcamentos.html"><span class="nav-icon">◎</span>Orçamentos</a>
 <a class="nav-link" href="/financeiro.html"><span class="nav-icon">◐</span>Financeiro</a>
 <a class="nav-link" href="/estoque.html"><span class="nav-icon">▣</span>Estoque</a>
 <a class="nav-link" href="/retornos.html"><span class="nav-icon">↺</span>Retornos</a>
-<a class="nav-link" href="/usuarios.html"><span class="nav-icon">👤</span>Usuários</a>
+<a class="nav-link active" href="/usuarios.html"><span class="nav-icon">👤</span>Usuários</a>
 
   </nav>
   <div class="sidebar-footer">
@@ -107,106 +107,49 @@ textarea{resize:vertical;min-height:70px}
 </aside>
 <main class="main">
   <div class="page-header">
-    <div><div class="page-title">Orçamentos</div><div class="page-subtitle">Gerencie orçamentos dos pacientes</div></div>
-    <button class="btn" onclick="abrirNovo()">+ Novo orçamento</button>
+    <div><div class="page-title">Usuários</div><div class="page-subtitle">Profissionais com acesso ao sistema</div></div>
+    <button class="btn" onclick="abrir()">+ Novo usuário</button>
   </div>
   <div class="table-wrap">
     <table>
-      <thead><tr><th>Paciente</th><th>Descrição</th><th>Total</th><th>Desconto</th><th>Valor final</th><th>Realização</th><th>Pagamento</th><th></th></tr></thead>
-      <tbody id="tbody"><tr><td colspan="8" class="empty">Carregando...</td></tr></tbody>
+      <thead><tr><th>Nome</th><th>E-mail</th><th>Cargo</th><th>Perfil</th><th>Status</th><th></th></tr></thead>
+      <tbody id="tbody"><tr><td colspan="6" class="empty">Carregando...</td></tr></tbody>
     </table>
   </div>
 </main>
 
-<!-- MODAL NOVO ORÇAMENTO -->
-<div class="modal-overlay" id="modal-novo">
-  <div class="modal" style="max-width:580px">
-    <div class="modal-title">Novo Orçamento</div>
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title" id="mt">Novo Usuário</div>
     <div class="form">
-      <div class="field"><label>Paciente</label><select id="o-pac"><option value="">Selecione...</option></select></div>
-      <div class="field"><label>Descrição</label><input id="o-desc" placeholder="Descrição geral do orçamento"/></div>
+      <div class="field"><label>Nome completo</label><input id="u-nome" placeholder="Nome do profissional"/></div>
+      <div class="field"><label>E-mail</label><input id="u-email" type="email" placeholder="email@clinica.com"/></div>
+      <div class="field" id="senha-field"><label>Senha</label><input id="u-senha" type="password" placeholder="Senha de acesso"/></div>
       <div class="field-row">
-        <div class="field"><label>Validade</label><input id="o-val" type="date"/></div>
-        <div class="field"><label>Desconto (%)</label><input id="o-desc-pct" type="number" min="0" max="100" step="0.5" placeholder="0" oninput="calcTotal()"/></div>
-      </div>
-      <div class="field"><label>Observações</label><textarea id="o-obs" placeholder="Observações do orçamento..."></textarea></div>
-      <div class="secao" style="margin-top:4px">Itens do orçamento</div>
-      <div id="itens-container"></div>
-      <button type="button" class="btn btn-outline" style="width:100%;justify-content:center" onclick="addItem()">+ Adicionar item</button>
-      <div class="total-box">
-        <div>
-          <div style="font-size:12px;color:var(--text3)">Subtotal</div>
-          <div style="font-size:13px;color:var(--text3)" id="subtotal-txt">R$ 0,00</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:12px;color:var(--text3)">Desconto</div>
-          <div style="font-size:13px;color:var(--error)" id="desconto-txt">- R$ 0,00</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:12px;color:var(--text3);font-weight:600">TOTAL FINAL</div>
-          <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:600;color:var(--accent)" id="total-txt">R$ 0,00</div>
+        <div class="field"><label>Cargo</label><input id="u-cargo" placeholder="Ex: Dentista, Fisioterapeuta"/></div>
+        <div class="field"><label>Perfil</label>
+          <select id="u-perfil">
+            <option value="profissional">Profissional</option>
+            <option value="admin">Admin</option>
+          </select>
         </div>
       </div>
-      <div id="msg-novo"></div>
+      <div class="field" id="ativo-field" style="display:none">
+        <label>Status</label>
+        <select id="u-ativo">
+          <option value="true">Ativo</option>
+          <option value="false">Inativo</option>
+        </select>
+      </div>
+      <div style="background:rgba(193,113,79,.07);border:1px solid rgba(193,113,79,.2);border-radius:10px;padding:12px;font-size:13px;color:var(--text2)">
+        <strong>Admin:</strong> acesso total ao sistema.<br>
+        <strong>Profissional:</strong> acessa só seus pacientes e consultas.
+      </div>
+      <div id="msg"></div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline" onclick="fecharNovo()">Cancelar</button>
-      <button class="btn" id="btn-salvar" onclick="salvar()">Salvar orçamento</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL BAIXA -->
-<div class="modal-overlay" id="modal-baixa">
-  <div class="modal" style="max-width:440px">
-    <div class="modal-title">Dar Baixa no Orçamento</div>
-    <div id="baixa-info" style="background:var(--surface2);border-radius:10px;padding:14px;margin-bottom:20px;font-size:14px"></div>
-    <div class="form">
-      <div class="field">
-        <label>Status de realização</label>
-        <select id="b-realizacao">
-          <option value="realizado">Realizado</option>
-          <option value="a_realizar">A realizar</option>
-          <option value="cancelado">Cancelado</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Status de pagamento</label>
-        <select id="b-pagamento" onchange="toggleParcelas()">
-          <option value="pago">Pago</option>
-          <option value="parcial">Parcial</option>
-          <option value="pendente">Pendente</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Forma de pagamento</label>
-        <select id="b-forma">
-          <option value="">Selecione...</option>
-          <option value="dinheiro">Dinheiro</option>
-          <option value="pix">PIX</option>
-          <option value="debito">Débito</option>
-          <option value="credito">Crédito</option>
-          <option value="convenio">Convênio</option>
-        </select>
-      </div>
-      <div class="field" id="parcelas-field" style="display:none">
-        <label>Número de parcelas</label>
-        <select id="b-parcelas">
-          <option value="1">1x (à vista)</option>
-          <option value="2">2x</option>
-          <option value="3">3x</option>
-          <option value="4">4x</option>
-          <option value="5">5x</option>
-          <option value="6">6x</option>
-          <option value="10">10x</option>
-          <option value="12">12x</option>
-        </select>
-      </div>
-      <div id="msg-baixa"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="fecharBaixa()">Cancelar</button>
-      <button class="btn" id="btn-baixa" onclick="confirmarBaixa()">Confirmar baixa</button>
+      <button class="btn btn-outline" onclick="fechar()">Cancelar</button>
+      <button class="btn" id="btn-s" onclick="salvar()">Salvar</button>
     </div>
   </div>
 </div>
@@ -229,102 +172,80 @@ async function api(path,opts={}){
 function fmtMoeda(v){return 'R$ '+parseFloat(v||0).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
 function fmtData(d){if(!d)return '—';return new Date(d).toLocaleDateString('pt-BR');}
 
-let itensList=[], baixaId=null, orcAtual=null;
+let todos=[], editId=null;
 
 async function carregar(){
-  const [data,pacs]=await Promise.all([api('/api/orcamentos'),api('/api/pacientes')]);
-  if(pacs){const s=document.getElementById('o-pac');s.innerHTML='<option value="">Selecione...</option>'+pacs.map(p=>`<option value="${p.id}">${p.nome}</option>`).join('');}
-  if(data){
+  const data=await api('/api/usuarios');
+  if(data){todos=data;
     const tb=document.getElementById('tbody');
-    if(!data.length){tb.innerHTML='<tr><td colspan="8" class="empty">Nenhum orçamento</td></tr>';return;}
-    tb.innerHTML=data.map(o=>`<tr>
-      <td style="font-weight:500">${o.paciente_nome}</td>
-      <td style="color:var(--text3)">${o.descricao||'—'}</td>
-      <td style="color:var(--text3);text-decoration:line-through;font-size:12px">${fmtMoeda(o.valor_total)}</td>
-      <td style="color:var(--error);font-size:12px">${o.desconto_percentual>0?o.desconto_percentual+'%':'—'}</td>
-      <td style="font-weight:600;color:var(--accent)">${fmtMoeda(o.valor_final||o.valor_total)}</td>
-      <td><span class="badge badge-${o.status_realizacao||'a_realizar'}">${(o.status_realizacao||'a realizar').replace('_',' ')}</span></td>
-      <td><span class="badge badge-${o.status_pagamento||'pendente'}">${o.status_pagamento||'pendente'}</span></td>
+    if(!data.length){tb.innerHTML='<tr><td colspan="6" class="empty">Nenhum usuário cadastrado</td></tr>';return;}
+    tb.innerHTML=data.map(u=>`<tr>
+      <td style="font-weight:500">${u.nome}</td>
+      <td style="color:var(--text2)">${u.email}</td>
+      <td style="color:var(--text3)">${u.cargo||'—'}</td>
+      <td><span class="badge ${u.perfil==='admin'?'badge-pago':'badge-pendente'}">${u.perfil}</span></td>
+      <td><span class="badge ${u.ativo?'badge-pago':'badge-cancelado'}">${u.ativo?'Ativo':'Inativo'}</span></td>
       <td style="display:flex;gap:6px">
-        <button class="btn btn-success" style="padding:5px 10px;font-size:12px" onclick="abrirBaixa(${o.id})">Baixa</button>
+        <button class="btn btn-outline" style="padding:5px 10px;font-size:12px" onclick="editar(${u.id})">Editar</button>
+        <button class="btn btn-danger" style="padding:5px 10px;font-size:12px" onclick="excluir(${u.id})">✕</button>
       </td>
     </tr>`).join('');
   }
 }
 
-function abrirNovo(){itensList=[];renderItens();document.getElementById('modal-novo').classList.add('open');}
-function fecharNovo(){document.getElementById('modal-novo').classList.remove('open');}
-
-function addItem(){itensList.push({descricao:'',quantidade:1,valor_unitario:0});renderItens();}
-function renderItens(){
-  document.getElementById('itens-container').innerHTML=itensList.map((it,i)=>`
-    <div style="display:grid;grid-template-columns:2fr 70px 100px 32px;gap:8px;margin-bottom:8px;align-items:center">
-      <input placeholder="Descrição do item" value="${it.descricao}" oninput="itensList[${i}].descricao=this.value" style="font-size:13px;padding:9px 12px"/>
-      <input type="number" placeholder="Qtd" value="${it.quantidade}" min="1" oninput="itensList[${i}].quantidade=parseInt(this.value)||1;calcTotal()" style="font-size:13px;padding:9px 12px"/>
-      <input type="number" placeholder="R$" value="${it.valor_unitario}" oninput="itensList[${i}].valor_unitario=parseFloat(this.value)||0;calcTotal()" style="font-size:13px;padding:9px 12px"/>
-      <button onclick="itensList.splice(${i},1);renderItens()" style="background:none;border:none;color:var(--error);cursor:pointer;font-size:20px;line-height:1">✕</button>
-    </div>`).join('');
-  calcTotal();
+function abrir(){
+  editId=null;
+  document.getElementById('mt').textContent='Novo Usuário';
+  document.getElementById('senha-field').style.display='block';
+  document.getElementById('ativo-field').style.display='none';
+  ['u-nome','u-email','u-senha','u-cargo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('u-perfil').value='profissional';
+  document.getElementById('msg').innerHTML='';
+  document.getElementById('modal').classList.add('open');
 }
-function calcTotal(){
-  const sub=itensList.reduce((s,i)=>s+(i.valor_unitario*i.quantidade),0);
-  const pct=parseFloat(document.getElementById('o-desc-pct').value)||0;
-  const desc=sub*pct/100;
-  const final=sub-desc;
-  document.getElementById('subtotal-txt').textContent=fmtMoeda(sub);
-  document.getElementById('desconto-txt').textContent='- '+fmtMoeda(desc);
-  document.getElementById('total-txt').textContent=fmtMoeda(final);
+
+function fechar(){document.getElementById('modal').classList.remove('open');}
+
+function editar(id){
+  const u=todos.find(x=>x.id===id);if(!u)return;
+  editId=id;
+  document.getElementById('mt').textContent='Editar Usuário';
+  document.getElementById('senha-field').style.display='none';
+  document.getElementById('ativo-field').style.display='block';
+  document.getElementById('u-nome').value=u.nome;
+  document.getElementById('u-email').value=u.email;
+  document.getElementById('u-cargo').value=u.cargo||'';
+  document.getElementById('u-perfil').value=u.perfil;
+  document.getElementById('u-ativo').value=String(u.ativo);
+  document.getElementById('msg').innerHTML='';
+  document.getElementById('modal').classList.add('open');
 }
 
 async function salvar(){
-  const btn=document.getElementById('btn-salvar');
-  const pac=document.getElementById('o-pac').value;
-  if(!pac){document.getElementById('msg-novo').innerHTML='<div class="msg error">Selecione um paciente</div>';return;}
+  const btn=document.getElementById('btn-s');
+  const nome=document.getElementById('u-nome').value.trim();
+  const email=document.getElementById('u-email').value.trim();
+  if(!nome||!email){document.getElementById('msg').innerHTML='<div class="msg error">Nome e e-mail são obrigatórios</div>';return;}
+  if(!editId&&!document.getElementById('u-senha').value){document.getElementById('msg').innerHTML='<div class="msg error">Informe uma senha</div>';return;}
   btn.disabled=true;btn.textContent='Salvando...';
-  const res=await api('/api/orcamentos',{method:'POST',body:JSON.stringify({
-    paciente_id:parseInt(pac),
-    descricao:document.getElementById('o-desc').value,
-    validade:document.getElementById('o-val').value||null,
-    desconto_percentual:parseFloat(document.getElementById('o-desc-pct').value)||0,
-    observacoes:document.getElementById('o-obs').value,
-    itens:itensList
-  })});
-  btn.disabled=false;btn.textContent='Salvar orçamento';
-  if(res){fecharNovo();carregar();}
+  let res;
+  if(editId){
+    res=await api('/api/usuarios/'+editId,{method:'PUT',body:JSON.stringify({nome,cargo:document.getElementById('u-cargo').value,perfil:document.getElementById('u-perfil').value,ativo:document.getElementById('u-ativo').value==='true'})});
+  }else{
+    res=await api('/api/usuarios',{method:'POST',body:JSON.stringify({nome,email,senha:document.getElementById('u-senha').value,cargo:document.getElementById('u-cargo').value,perfil:document.getElementById('u-perfil').value})});
+  }
+  btn.disabled=false;btn.textContent='Salvar';
+  if(res&&!res.erro){fechar();carregar();}
+  else if(res?.erro){document.getElementById('msg').innerHTML=`<div class="msg error">${res.erro}</div>`;}
 }
 
-function abrirBaixa(id){
-  baixaId=id;
-  const orc=document.querySelector(`tr[data-id="${id}"]`);
-  document.getElementById('modal-baixa').classList.add('open');
-  document.getElementById('msg-baixa').innerHTML='';
+async function excluir(id){
+  if(!confirm('Remover este usuário?'))return;
+  await api('/api/usuarios/'+id,{method:'DELETE'});
+  carregar();
 }
 
-function fecharBaixa(){document.getElementById('modal-baixa').classList.remove('open');}
-
-function toggleParcelas(){
-  const forma=document.getElementById('b-forma').value;
-  const pag=document.getElementById('b-pagamento').value;
-  document.getElementById('parcelas-field').style.display=(forma==='credito'&&pag!=='pendente')?'block':'none';
-}
-
-document.getElementById('b-forma').addEventListener('change',toggleParcelas);
-
-async function confirmarBaixa(){
-  const btn=document.getElementById('btn-baixa');
-  btn.disabled=true;btn.textContent='Salvando...';
-  const res=await api('/api/orcamentos/'+baixaId+'/baixa',{method:'PUT',body:JSON.stringify({
-    status_realizacao:document.getElementById('b-realizacao').value,
-    status_pagamento:document.getElementById('b-pagamento').value,
-    forma_pagamento:document.getElementById('b-forma').value,
-    parcelas:parseInt(document.getElementById('b-parcelas').value)||1,
-  })});
-  btn.disabled=false;btn.textContent='Confirmar baixa';
-  if(res){fecharBaixa();carregar();}
-}
-
-document.getElementById('modal-novo').addEventListener('click',e=>{if(e.target===e.currentTarget)fecharNovo();});
-document.getElementById('modal-baixa').addEventListener('click',e=>{if(e.target===e.currentTarget)fecharBaixa();});
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===e.currentTarget)fechar();});
 carregar();
 </script>
 </body>
