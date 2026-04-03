@@ -5,88 +5,119 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>ClinicOS — Pacientes</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f2f2f7;--surface:#ffffff;--surface2:#f2f2f7;--surface3:#e5e5ea;
-  --border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.12);
-  --accent:#007aff;--accent-light:rgba(0,122,255,.1);
-  --text:#000000;--text2:#3c3c43;--text3:#8e8e93;
-  --success:#34c759;--error:#ff3b30;--warning:#ff9500;--info:#5ac8fa;
-  --red:#ff3b30;--green:#34c759;--blue:#007aff;--teal:#5ac8fa;
-  --shadow:0 2px 12px rgba(0,0,0,.08);--shadow2:0 8px 32px rgba(0,0,0,.12);
-  --radius:14px;--radius2:20px;--radius3:10px;
+  --bg:#faf8f5;
+  --surface:#ffffff;
+  --surface2:#f5f1ec;
+  --surface3:#ede8e0;
+  --border:rgba(139,90,60,.1);
+  --border2:rgba(139,90,60,.18);
+  --accent:#c1714f;
+  --accent2:#e8916e;
+  --accent-light:rgba(193,113,79,.1);
+  --gold:#b8956a;
+  --gold-light:rgba(184,149,106,.12);
+  --text:#1a1208;
+  --text2:#4a3728;
+  --text3:#9c8070;
+  --success:#5a8a5a;
+  --error:#c0392b;
+  --warning:#c47c2b;
+  --shadow:0 2px 16px rgba(139,90,60,.08);
+  --shadow2:0 8px 40px rgba(139,90,60,.14);
+  --radius:16px;--radius2:22px;--radius3:10px;
 }
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',sans-serif;min-height:100vh;display:flex;-webkit-font-smoothing:antialiased}
-.sidebar{width:260px;min-height:100vh;background:rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 12px;position:fixed;top:0;left:0;bottom:0;overflow-y:auto}
-.logo{display:flex;align-items:center;gap:10px;padding:8px 12px;margin-bottom:28px}
-.logo-icon{width:36px;height:36px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(0,122,255,.3)}
-.logo-text{font-size:20px;font-weight:700;letter-spacing:-.3px;color:var(--text)}
-.logo-text span{color:var(--accent)}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;-webkit-font-smoothing:antialiased}
+
+/* SIDEBAR */
+.sidebar{width:264px;min-height:100vh;background:var(--text);display:flex;flex-direction:column;padding:28px 14px;position:fixed;top:0;left:0;bottom:0;overflow-y:auto}
+.logo{display:flex;align-items:center;gap:12px;padding:8px 12px;margin-bottom:36px}
+.logo-icon{width:38px;height:38px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-text{font-family:'Playfair Display',serif;font-size:21px;font-weight:600;color:#fff;letter-spacing:.2px}
+.logo-text span{color:var(--accent2)}
 nav{flex:1;display:flex;flex-direction:column;gap:2px}
-.nav-sec{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;padding:16px 12px 6px}
-.nav-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius3);color:var(--text2);text-decoration:none;font-size:15px;font-weight:400;transition:all .15s}
-.nav-link:hover{background:var(--surface2)}
-.nav-link.active{background:var(--accent-light);color:var(--accent);font-weight:500}
-.nav-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.nav-link.active .nav-icon{background:var(--accent);color:#fff}
-.nav-link:not(.active) .nav-icon{background:var(--surface3);color:var(--text2)}
-.sidebar-footer{border-top:1px solid var(--border);padding-top:12px;margin-top:12px}
+.nav-sec{font-size:10px;font-weight:600;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.2px;padding:18px 12px 6px}
+.nav-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius3);color:rgba(255,255,255,.55);text-decoration:none;font-size:14px;font-weight:400;transition:all .15s}
+.nav-link:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
+.nav-link.active{background:var(--accent);color:#fff;font-weight:500}
+.nav-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:rgba(255,255,255,.08)}
+.nav-link.active .nav-icon{background:rgba(255,255,255,.2)}
+.sidebar-footer{border-top:1px solid rgba(255,255,255,.08);padding-top:14px;margin-top:14px}
 .clinica-info{padding:10px 12px;display:flex;align-items:center;gap:10px}
-.avatar{width:34px;height:34px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#fff;flex-shrink:0}
-.clinica-nome{font-size:13px;font-weight:600;color:var(--text)}
-.clinica-esp{font-size:11px;color:var(--text3)}
-.btn-logout{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius3);color:var(--error);background:none;border:none;font-family:inherit;font-size:14px;cursor:pointer;transition:all .15s;width:100%}
-.btn-logout:hover{background:rgba(255,59,48,.08)}
-.main{margin-left:260px;flex:1;padding:32px 32px;min-height:100vh}
-.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px}
-.page-title{font-size:34px;font-weight:700;letter-spacing:-.5px;color:var(--text)}
-.page-subtitle{font-size:15px;color:var(--text3);margin-top:2px}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:var(--accent);border:none;border-radius:var(--radius3);color:#fff;font-family:inherit;font-size:15px;font-weight:500;cursor:pointer;transition:all .15s;text-decoration:none}
-.btn:hover{opacity:.85;transform:scale(.98)}
-.btn:active{transform:scale(.96)}
+.avatar{width:34px;height:34px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff;flex-shrink:0}
+.clinica-nome{font-size:13px;font-weight:500;color:#fff}
+.clinica-esp{font-size:11px;color:rgba(255,255,255,.4)}
+.btn-logout{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius3);color:rgba(255,255,255,.4);background:none;border:none;font-family:inherit;font-size:14px;cursor:pointer;transition:all .15s;width:100%}
+.btn-logout:hover{background:rgba(192,57,43,.15);color:#e88;}
+
+/* MAIN */
+.main{margin-left:264px;flex:1;padding:36px 36px;min-height:100vh}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:32px}
+.page-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:600;letter-spacing:-.3px;color:var(--text)}
+.page-subtitle{font-size:14px;color:var(--text3);margin-top:3px;font-weight:400}
+
+/* BTN */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:11px 20px;background:var(--accent);border:none;border-radius:var(--radius3);color:#fff;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;text-decoration:none;letter-spacing:.1px}
+.btn:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(193,113,79,.3)}
+.btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.4;cursor:not-allowed}
-.btn-outline{background:var(--surface);border:1px solid var(--border2);color:var(--text2)}
-.btn-outline:hover{background:var(--surface2);opacity:1}
-.btn-danger{background:rgba(255,59,48,.1);border:none;color:var(--error)}
-.btn-danger:hover{background:rgba(255,59,48,.18);opacity:1}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light);transform:none;box-shadow:none}
+.btn-danger{background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.2);color:var(--error)}
+.btn-danger:hover{background:rgba(192,57,43,.18);transform:none;box-shadow:none}
+
+/* TABLE */
 .table-wrap{background:var(--surface);border-radius:var(--radius2);box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--border)}
 table{width:100%;border-collapse:collapse}
 thead{background:var(--surface2)}
-th{padding:11px 20px;text-align:left;font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
-td{padding:14px 20px;font-size:15px;border-top:1px solid var(--border)}
-tr:hover td{background:rgba(0,0,0,.02)}
-.empty{text-align:center;padding:56px;color:var(--text3);font-size:15px}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .25s}
+th{padding:12px 20px;text-align:left;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.6px}
+td{padding:15px 20px;font-size:14px;border-top:1px solid var(--border);color:var(--text)}
+tr:hover td{background:var(--surface2)}
+.empty{text-align:center;padding:60px;color:var(--text3);font-size:14px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,18,8,.5);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .25s}
 .modal-overlay.open{opacity:1;pointer-events:all}
-.modal{background:var(--surface);border-radius:var(--radius2);padding:28px;width:100%;max-width:480px;transform:translateY(20px) scale(.97);transition:all .25s;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow2)}
+.modal{background:var(--surface);border-radius:var(--radius2);padding:32px;width:100%;max-width:480px;transform:translateY(20px) scale(.97);transition:all .25s;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow2);border:1px solid var(--border)}
 .modal-overlay.open .modal{transform:translateY(0) scale(1)}
-.modal-title{font-size:20px;font-weight:700;margin-bottom:20px;letter-spacing:-.3px}
+.modal-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;margin-bottom:22px;color:var(--text)}
 .form{display:flex;flex-direction:column;gap:14px}
 .field{display:flex;flex-direction:column;gap:6px}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-label{font-size:13px;font-weight:500;color:var(--text2)}
-input,select,textarea{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius3);padding:11px 14px;color:var(--text);font-family:inherit;font-size:15px;outline:none;transition:border-color .15s,box-shadow .15s;width:100%;-webkit-appearance:none}
-input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,122,255,.15);background:#fff}
+label{font-size:12px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+input,select,textarea{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius3);padding:11px 14px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:all .15s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light);background:var(--surface)}
 input::placeholder,textarea::placeholder{color:var(--text3)}
+select option{background:var(--surface)}
 textarea{resize:vertical;min-height:80px}
-.modal-footer{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
+.modal-footer{display:flex;gap:10px;margin-top:22px;justify-content:flex-end}
 .msg{font-size:13px;padding:10px 14px;border-radius:var(--radius3);margin-top:4px}
-.msg.error{background:rgba(255,59,48,.08);color:var(--error);border:1px solid rgba(255,59,48,.2)}
-.msg.success{background:rgba(52,199,89,.08);color:var(--success);border:1px solid rgba(52,199,89,.2)}
-.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500}
-.badge-agendada{background:rgba(90,200,250,.15);color:#0071a4}
-.badge-realizada,.badge-aprovado,.badge-ativo{background:rgba(52,199,89,.15);color:#248a3d}
-.badge-cancelada,.badge-recusado,.badge-critico{background:rgba(255,59,48,.12);color:#c0392b}
-.badge-pendente{background:rgba(255,149,0,.12);color:#b25000}
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px}
-.stat-card{background:var(--surface);border-radius:var(--radius2);padding:22px;box-shadow:var(--shadow);border:1px solid var(--border)}
-.stat-label{font-size:13px;color:var(--text3);font-weight:500;margin-bottom:8px}
-.stat-value{font-size:34px;font-weight:700;letter-spacing:-.5px;line-height:1}
-.stat-sub{font-size:12px;color:var(--text3);margin-top:4px}
-.search-bar{display:flex;gap:10px;margin-bottom:20px}
-.search-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius3);padding:10px 14px;color:var(--text);font-family:inherit;font-size:15px;outline:none;transition:border-color .15s,box-shadow .15s;box-shadow:var(--shadow)}
-.search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,122,255,.12)}
+.msg.error{background:rgba(192,57,43,.07);color:var(--error);border:1px solid rgba(192,57,43,.15)}
+.msg.success{background:rgba(90,138,90,.07);color:var(--success);border:1px solid rgba(90,138,90,.15)}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.2px}
+.badge-agendada{background:rgba(184,149,106,.15);color:#7a5c2e}
+.badge-realizada,.badge-aprovado,.badge-ativo{background:rgba(90,138,90,.12);color:#2d6b3a}
+.badge-cancelada,.badge-recusado,.badge-critico{background:rgba(192,57,43,.1);color:var(--error)}
+.badge-pendente{background:rgba(196,124,43,.12);color:#8a5a10}
+
+/* STATS */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px;margin-bottom:32px}
+.stat-card{background:var(--surface);border-radius:var(--radius2);padding:24px;box-shadow:var(--shadow);border:1px solid var(--border);position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+.stat-label{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
+.stat-value{font-family:'Playfair Display',serif;font-size:38px;font-weight:600;line-height:1;color:var(--text)}
+.stat-sub{font-size:12px;color:var(--text3);margin-top:5px}
+
+/* SEARCH */
+.search-bar{display:flex;gap:10px;margin-bottom:22px}
+.search-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius3);padding:11px 16px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:all .15s;box-shadow:var(--shadow)}
+.search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
 .search-input::placeholder{color:var(--text3)}
+
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
@@ -97,14 +128,14 @@ textarea{resize:vertical;min-height:80px}
   </div>
   <nav>
     <div class="nav-sec">Menu</div>
-    <a class="nav-link" href="/dashboard.html"><span class="nav-icon" style="background:rgba(0,0,0,.06);color:#007aff">◈</span>Dashboard</a>
-<a class="nav-link active" href="/pacientes.html"><span class="nav-icon" style="background:#34c759;color:#fff">◉</span>Pacientes</a>
-<a class="nav-link" href="/consultas.html"><span class="nav-icon" style="background:rgba(0,0,0,.06);color:#ff9500">◷</span>Consultas</a>
-<a class="nav-link" href="/procedimentos.html"><span class="nav-icon" style="background:rgba(0,0,0,.06);color:#5ac8fa">✦</span>Procedimentos</a>
-<a class="nav-link" href="/orcamentos.html"><span class="nav-icon" style="background:rgba(0,0,0,.06);color:#af52de">◎</span>Orçamentos</a>
-<a class="nav-link" href="/financeiro.html"><span class="nav-icon" style="background:rgba(0,0,0,.06);color:#ff3b30">◐</span>Financeiro</a>
-<a class="nav-link" href="/estoque.html"><span class="nav-icon" style="background:rgba(0,0,0,.06);color:#ff6b35">▣</span>Estoque</a>
-<a class="nav-link" href="/retornos.html"><span class="nav-icon" style="background:rgba(0,0,0,.06);color:#32ade6">↺</span>Retornos</a>
+    <a class="nav-link" href="/dashboard.html"><span class="nav-icon">◈</span>Dashboard</a>
+<a class="nav-link active" href="/pacientes.html"><span class="nav-icon">◉</span>Pacientes</a>
+<a class="nav-link" href="/consultas.html"><span class="nav-icon">◷</span>Consultas</a>
+<a class="nav-link" href="/procedimentos.html"><span class="nav-icon">✦</span>Procedimentos</a>
+<a class="nav-link" href="/orcamentos.html"><span class="nav-icon">◎</span>Orçamentos</a>
+<a class="nav-link" href="/financeiro.html"><span class="nav-icon">◐</span>Financeiro</a>
+<a class="nav-link" href="/estoque.html"><span class="nav-icon">▣</span>Estoque</a>
+<a class="nav-link" href="/retornos.html"><span class="nav-icon">↺</span>Retornos</a>
 
   </nav>
   <div class="sidebar-footer">
@@ -123,9 +154,7 @@ textarea{resize:vertical;min-height:80px}
     <div><div class="page-title">Pacientes</div><div class="page-subtitle">Gerencie os pacientes da clínica</div></div>
     <button class="btn" onclick="abrir()">+ Novo paciente</button>
   </div>
-  <div class="search-bar">
-    <input class="search-input" placeholder="🔍  Buscar paciente..." id="busca" oninput="filtrar()"/>
-  </div>
+  <div class="search-bar"><input class="search-input" placeholder="Buscar paciente..." id="busca" oninput="filtrar()"/></div>
   <div class="table-wrap">
     <table><thead><tr><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Nascimento</th><th></th></tr></thead>
     <tbody id="tbody"><tr><td colspan="5" class="empty">Carregando...</td></tr></tbody></table>
@@ -141,9 +170,7 @@ textarea{resize:vertical;min-height:80px}
         <div class="field"><label>CPF</label><input id="p-cpf" placeholder="000.000.000-00"/></div>
       </div>
       <div class="field"><label>E-mail</label><input id="p-email" type="email" placeholder="email@exemplo.com"/></div>
-      <div class="field-row">
-        <div class="field"><label>Data de nascimento</label><input id="p-nasc" type="date"/></div>
-      </div>
+      <div class="field"><label>Data de nascimento</label><input id="p-nasc" type="date"/></div>
       <div class="field"><label>Endereço</label><input id="p-end" placeholder="Rua, número, bairro"/></div>
       <div class="field"><label>Observações</label><textarea id="p-obs" placeholder="Observações clínicas..."></textarea></div>
       <div id="msg"></div>
@@ -173,38 +200,13 @@ function fmtData(d){if(!d)return '—';return new Date(d).toLocaleDateString('pt
 function fmtDH(d){if(!d)return '—';const dt=new Date(d);return dt.toLocaleDateString('pt-BR')+' '+dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
 
 let todos=[];
-async function carregar(){
-  const data=await api('/api/pacientes');
-  if(data){todos=data;renderizar(data);}
-}
+async function carregar(){const data=await api('/api/pacientes');if(data){todos=data;renderizar(data);}}
 function filtrar(){const q=document.getElementById('busca').value.toLowerCase();renderizar(todos.filter(p=>p.nome.toLowerCase().includes(q)));}
-function renderizar(lista){
-  const tb=document.getElementById('tbody');
-  if(!lista.length){tb.innerHTML='<tr><td colspan="5" class="empty">Nenhum paciente cadastrado</td></tr>';return;}
-  tb.innerHTML=lista.map(p=>`<tr style="animation:fadeUp .3s ease forwards;opacity:0">
-    <td style="font-weight:500">${p.nome}</td>
-    <td style="color:var(--text2)">${p.telefone||'—'}</td>
-    <td style="color:var(--text3)">${p.email||'—'}</td>
-    <td style="color:var(--text3)">${fmtData(p.data_nascimento)}</td>
-    <td><button class="btn btn-outline" style="padding:6px 12px;font-size:13px" onclick="editar(${p.id})">Editar</button></td>
-  </tr>`).join('');
-}
+function renderizar(lista){const tb=document.getElementById('tbody');if(!lista.length){tb.innerHTML='<tr><td colspan="5" class="empty">Nenhum paciente cadastrado</td></tr>';return;}tb.innerHTML=lista.map(p=>`<tr><td style="font-weight:500">${p.nome}</td><td style="color:var(--text2)">${p.telefone||'—'}</td><td style="color:var(--text3)">${p.email||'—'}</td><td style="color:var(--text3)">${fmtData(p.data_nascimento)}</td><td><button class="btn btn-outline" style="padding:6px 12px;font-size:13px" onclick="editar(${p.id})">Editar</button></td></tr>`).join('');}
 function abrir(){document.getElementById('modal').classList.add('open');}
 function fechar(){document.getElementById('modal').classList.remove('open');}
-async function editar(id){
-  const p=todos.find(x=>x.id===id);if(!p)return;
-  ['nome','tel','cpf','email','nasc','end','obs'].forEach(k=>{const el=document.getElementById('p-'+k);if(el)el.value=p[k==='tel'?'telefone':k==='nasc'?'data_nascimento':k==='end'?'endereco':k==='obs'?'observacoes':k]||'';});
-  document.getElementById('modal').classList.add('open');
-}
-async function salvar(){
-  const btn=document.getElementById('btn-s');
-  const nome=document.getElementById('p-nome').value.trim();
-  if(!nome){document.getElementById('msg').innerHTML='<div class="msg error">Informe o nome</div>';return;}
-  btn.disabled=true;btn.textContent='Salvando...';
-  const res=await api('/api/pacientes',{method:'POST',body:JSON.stringify({nome,telefone:document.getElementById('p-tel').value,cpf:document.getElementById('p-cpf').value,email:document.getElementById('p-email').value,data_nascimento:document.getElementById('p-nasc').value||null,endereco:document.getElementById('p-end').value,observacoes:document.getElementById('p-obs').value})});
-  btn.disabled=false;btn.textContent='Salvar';
-  if(res){fechar();carregar();}
-}
+function editar(id){const p=todos.find(x=>x.id===id);if(!p)return;document.getElementById('p-nome').value=p.nome||'';document.getElementById('p-tel').value=p.telefone||'';document.getElementById('p-cpf').value=p.cpf||'';document.getElementById('p-email').value=p.email||'';document.getElementById('p-nasc').value=p.data_nascimento||'';document.getElementById('p-end').value=p.endereco||'';document.getElementById('p-obs').value=p.observacoes||'';document.getElementById('modal').classList.add('open');}
+async function salvar(){const btn=document.getElementById('btn-s');const nome=document.getElementById('p-nome').value.trim();if(!nome){document.getElementById('msg').innerHTML='<div class="msg error">Informe o nome</div>';return;}btn.disabled=true;btn.textContent='Salvando...';const res=await api('/api/pacientes',{method:'POST',body:JSON.stringify({nome,telefone:document.getElementById('p-tel').value,cpf:document.getElementById('p-cpf').value,email:document.getElementById('p-email').value,data_nascimento:document.getElementById('p-nasc').value||null,endereco:document.getElementById('p-end').value,observacoes:document.getElementById('p-obs').value})});btn.disabled=false;btn.textContent='Salvar';if(res){fechar();carregar();}}
 document.getElementById('modal').addEventListener('click',e=>{if(e.target===e.currentTarget)fechar();});
 carregar();
 </script></body></html>
