@@ -147,7 +147,7 @@ textarea{resize:vertical;min-height:80px}
         <div class="clinica-esp" id="clinica-esp"></div>
       </div>
     </div>
-    <button class="btn-logout" onclick="logout()">⎋ Sair</button>
+    <button class="btn-logout" onclick="logout()" style="background:none;color:rgba(255,255,255,.4)">⎋ Sair</button>
   </div>
 </aside>
 <main class="main">
@@ -184,7 +184,7 @@ const clinica=JSON.parse(localStorage.getItem('clinica')||'{}');
 if(document.getElementById('clinica-nome'))document.getElementById('clinica-nome').textContent=clinica.nome||'Clínica';
 if(document.getElementById('clinica-esp'))document.getElementById('clinica-esp').textContent=clinica.especialidade||'';
 if(document.getElementById('avatar'))document.getElementById('avatar').textContent=(clinica.nome||'C')[0].toUpperCase();
-function logout(){localStorage.clear();window.location.href='/login.html';}
+function logout(){localStorage.removeItem("token");localStorage.removeItem("clinica");window.location.href="/login.html";}
 async function api(path,opts={}){
   const res=await fetch(API+path,{headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},...opts});
   if(res.status===401){logout();return null;}
