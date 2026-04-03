@@ -268,23 +268,33 @@
 <body>
 
 <aside class="sidebar">
-      <div class="logo" style="display:flex;align-items:center;gap:12px;">
-      <div style="width:36px;height:36px;background:#4fd1c5;border-radius:10px;display:flex;align-items:center;justify-content:center;">
-        <svg viewBox="0 0 36 36" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 25 8 A 12 12 0 1 0 25 28" fill="none" stroke="#0a0d12" stroke-width="4" stroke-linecap="round"/>
-          <line x1="25" y1="8" x2="32" y2="8" stroke="#0a0d12" stroke-width="4" stroke-linecap="round"/>
-          <line x1="25" y1="28" x2="32" y2="28" stroke="#0a0d12" stroke-width="4" stroke-linecap="round"/>
-        </svg>
+  <div class="logo">
+      <div style="width:36px;height:36px;background:#4fd1c5;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg viewBox="0 0 36 36" width="36" height="36"><path d="M 25 8 A 12 12 0 1 0 25 28" fill="none" stroke="#0a0d12" stroke-width="4" stroke-linecap="round"/><line x1="25" y1="8" x2="32" y2="8" stroke="#0a0d12" stroke-width="4" stroke-linecap="round"/><line x1="25" y1="28" x2="32" y2="28" stroke="#0a0d12" stroke-width="4" stroke-linecap="round"/></svg>
       </div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;">
-        Clinic<span style="color:#4fd1c5;">OS</span>
-      </div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;">Clinic<span style="color:#4fd1c5;">OS</span></div>
     </div>
+  <nav>
+    <div class="nav-sec">Principal</div>
+    <a class="nav-link active" href="/dashboard.html"><span style="width:20px;text-align:center;font-size:15px">◈</span>Dashboard</a>
+<a class="nav-link" href="/pacientes.html"><span style="width:20px;text-align:center;font-size:15px">◉</span>Pacientes</a>
+<a class="nav-link" href="/consultas.html"><span style="width:20px;text-align:center;font-size:15px">◷</span>Consultas</a>
+<a class="nav-link" href="/procedimentos.html"><span style="width:20px;text-align:center;font-size:15px">✦</span>Procedimentos</a>
+<a class="nav-link" href="/orcamentos.html"><span style="width:20px;text-align:center;font-size:15px">◎</span>Orçamentos</a>
+<a class="nav-link" href="/financeiro.html"><span style="width:20px;text-align:center;font-size:15px">◐</span>Financeiro</a>
+<a class="nav-link" href="/estoque.html"><span style="width:20px;text-align:center;font-size:15px">▣</span>Estoque</a>
+<a class="nav-link" href="/retornos.html"><span style="width:20px;text-align:center;font-size:15px">↺</span>Retornos</a>
 
+  </nav>
+  <div class="sidebar-footer">
+    <div class="clinica-info">
+      <div class="avatar" id="avatar">C</div>
+      <div>
+        <div style="font-size:13px;font-weight:500" id="clinica-nome">Clínica</div>
+        <div style="font-size:11px;color:var(--muted)" id="clinica-esp"></div>
+      </div>
     </div>
-    <button class="btn-logout" onclick="logout()">
-      <span>⎋</span> Sair
-    </button>
+    <button class="btn-logout" onclick="logout()">⎋ Sair</button>
   </div>
 </aside>
 

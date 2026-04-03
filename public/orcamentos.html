@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ClinicOS — Orçamentos</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0d12;--surface:#111520;--surface2:#161c2b;--border:#1e2535;--accent:#4fd1c5;--accent2:#38bdf8;--text:#e2e8f0;--muted:#64748b;--error:#f87171;--success:#4ade80;--warning:#fbbf24}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex}
+.sidebar{width:240px;min-height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 16px;position:fixed;top:0;left:0;bottom:0;overflow-y:auto}
+.logo{display:flex;align-items:center;gap:12px;padding:8px 12px;margin-bottom:32px}
+nav{flex:1;display:flex;flex-direction:column;gap:4px}
+.nav-sec{font-size:10px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:1px;padding:16px 12px 8px}
+.nav-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:var(--muted);text-decoration:none;font-size:14px;transition:all .15s}
+.nav-link:hover{background:var(--surface2);color:var(--text)}
+.nav-link.active{background:rgba(79,209,197,.1);color:var(--accent)}
+.sidebar-footer{border-top:1px solid var(--border);padding-top:16px;margin-top:16px}
+.clinica-info{padding:10px 12px;display:flex;align-items:center;gap:10px}
+.avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#0a0d12;flex-shrink:0}
+.btn-logout{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:var(--muted);background:none;border:none;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;transition:all .15s;width:100%}
+.btn-logout:hover{background:rgba(248,113,113,.1);color:var(--error)}
+.main{margin-left:240px;flex:1;padding:32px 36px;min-height:100vh}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600}
+.page-subtitle{font-size:14px;color:var(--muted);margin-top:2px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:10px;color:#0a0d12;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .1s}
+.btn:hover{opacity:.9;transform:translateY(-1px)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:none}
+.btn-danger{background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.3);color:var(--error)}
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--surface2)}
+th{padding:12px 20px;text-align:left;font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+td{padding:14px 20px;font-size:14px;border-top:1px solid var(--border)}
+tr:hover td{background:var(--surface2)}
+.empty{text-align:center;padding:48px;color:var(--muted);font-size:14px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px;width:100%;max-width:480px;transform:translateY(16px);transition:transform .2s;max-height:90vh;overflow-y:auto}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;margin-bottom:24px}
+.form{display:flex;flex-direction:column;gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+input,select,textarea{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+input::placeholder,textarea::placeholder{color:var(--muted)}
+select option{background:var(--surface)}
+textarea{resize:vertical;min-height:80px}
+.modal-footer{display:flex;gap:10px;margin-top:24px;justify-content:flex-end}
+.msg{font-size:13px;padding:10px 14px;border-radius:8px;margin-top:4px}
+.msg.error{background:rgba(248,113,113,.1);color:var(--error);border:1px solid rgba(248,113,113,.2)}
+.msg.success{background:rgba(74,222,128,.1);color:var(--success);border:1px solid rgba(74,222,128,.2)}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-agendada{background:rgba(56,189,248,.1);color:var(--accent2)}
+.badge-realizada,.badge-aprovado,.badge-ativo{background:rgba(74,222,128,.1);color:var(--success)}
+.badge-cancelada,.badge-recusado,.badge-critico{background:rgba(248,113,113,.1);color:var(--error)}
+.badge-pendente{background:rgba(251,191,36,.1);color:var(--warning)}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px}
+.stat-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.stat-value{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;line-height:1}
+.stat-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.search-bar{display:flex;gap:12px;margin-bottom:24px}
+.search-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--accent)}
+.search-input::placeholder{color:var(--muted)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body><aside class="sidebar">
+  <div class="logo">
+      <div style="width:36px;height:36px;background:#4fd1c5;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg viewBox="0 0 36 36" width="36" height="36"><path d="M 25 8 A 12 12 0 1 0 25 28" fill="none" stroke="#0a0d12" stroke-width="4" stroke-linecap="round"/><line x1="25" y1="8" x2="32" y2="8" stroke="#0a0d12" stroke-width="4" stroke-linecap="round"/><line x1="25" y1="28" x2="32" y2="28" stroke="#0a0d12" stroke-width="4" stroke-linecap="round"/></svg>
+      </div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;">Clinic<span style="color:#4fd1c5;">OS</span></div>
+    </div>
+  <nav>
+    <div class="nav-sec">Principal</div>
+    <a class="nav-link" href="/dashboard.html"><span style="width:20px;text-align:center;font-size:15px">◈</span>Dashboard</a>
+<a class="nav-link" href="/pacientes.html"><span style="width:20px;text-align:center;font-size:15px">◉</span>Pacientes</a>
+<a class="nav-link" href="/consultas.html"><span style="width:20px;text-align:center;font-size:15px">◷</span>Consultas</a>
+<a class="nav-link" href="/procedimentos.html"><span style="width:20px;text-align:center;font-size:15px">✦</span>Procedimentos</a>
+<a class="nav-link active" href="/orcamentos.html"><span style="width:20px;text-align:center;font-size:15px">◎</span>Orçamentos</a>
+<a class="nav-link" href="/financeiro.html"><span style="width:20px;text-align:center;font-size:15px">◐</span>Financeiro</a>
+<a class="nav-link" href="/estoque.html"><span style="width:20px;text-align:center;font-size:15px">▣</span>Estoque</a>
+<a class="nav-link" href="/retornos.html"><span style="width:20px;text-align:center;font-size:15px">↺</span>Retornos</a>
+
+  </nav>
+  <div class="sidebar-footer">
+    <div class="clinica-info">
+      <div class="avatar" id="avatar">C</div>
+      <div>
+        <div style="font-size:13px;font-weight:500" id="clinica-nome">Clínica</div>
+        <div style="font-size:11px;color:var(--muted)" id="clinica-esp"></div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="logout()">⎋ Sair</button>
+  </div>
+</aside>
+<main class="main">
+  <div class="page-header">
+    <div><div class="page-title">Orçamentos</div><div class="page-subtitle">Gere e gerencie orçamentos para pacientes</div></div>
+    <button class="btn" onclick="abrir()">+ Novo orçamento</button>
+  </div>
+  <div class="table-wrap">
+    <table><thead><tr><th>Paciente</th><th>Descrição</th><th>Valor total</th><th>Status</th><th>Data</th><th></th></tr></thead>
+    <tbody id="tbody"><tr><td colspan="6" class="empty">Carregando...</td></tr></tbody></table>
+  </div>
+</main>
+<div class="modal-overlay" id="modal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-title">Novo Orçamento</div>
+    <div class="form">
+      <div class="field"><label>Paciente</label><select id="o-pac"><option value="">Selecione...</option></select></div>
+      <div class="field"><label>Descrição</label><input id="o-desc" placeholder="Descrição do orçamento"/></div>
+      <div class="field"><label>Validade</label><input id="o-val" type="date"/></div>
+      <div style="margin-top:8px">
+        <div style="font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Itens do orçamento</div>
+        <div id="itens-container"></div>
+        <button type="button" class="btn btn-outline" style="width:100%;margin-top:8px" onclick="addItem()">+ Adicionar item</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--surface2);border-radius:10px;margin-top:8px">
+        <span style="font-size:14px;color:var(--muted)">Total</span>
+        <span style="font-size:20px;font-weight:600;color:var(--accent)" id="total-orc">R$ 0,00</span>
+      </div>
+      <div id="msg"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="fechar()">Cancelar</button>
+      <button class="btn" id="btn-salvar" onclick="salvar()">Salvar orçamento</button>
+    </div>
+  </div>
+</div>
+<script>
+const API='https://clinicos-backend-production-68fe.up.railway.app';
+const token=localStorage.getItem('token');
+if(!token)window.location.href='/login.html';
+const clinica=JSON.parse(localStorage.getItem('clinica')||'{}');
+document.getElementById('clinica-nome').textContent=clinica.nome||'Clínica';
+document.getElementById('clinica-esp').textContent=clinica.especialidade||'';
+document.getElementById('avatar').textContent=(clinica.nome||'C')[0].toUpperCase();
+function logout(){localStorage.clear();window.location.href='/login.html';}
+async function api(path,opts={}){
+  const res=await fetch(API+path,{headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},...opts});
+  if(res.status===401){logout();return null;}
+  return res.json();
+}
+function fmtMoeda(v){return 'R$ '+parseFloat(v||0).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+function fmtData(d){if(!d)return '—';return new Date(d).toLocaleDateString('pt-BR');}
+function fmtDH(d){if(!d)return '—';const dt=new Date(d);return dt.toLocaleDateString('pt-BR')+' '+dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
+
+let procs=[],itens=[];
+async function carregar(){
+  const [data,pacs,ps]=await Promise.all([api('/api/orcamentos'),api('/api/pacientes'),api('/api/procedimentos')]);
+  procs=ps||[];
+  if(pacs){const sel=document.getElementById('o-pac');sel.innerHTML='<option value="">Selecione...</option>'+pacs.map(p=>`<option value="${p.id}">${p.nome}</option>`).join('');}
+  if(data){
+    const tb=document.getElementById('tbody');
+    if(!data.length){tb.innerHTML='<tr><td colspan="6" class="empty">Nenhum orçamento criado</td></tr>';return;}
+    tb.innerHTML=data.map(o=>`<tr>
+      <td><strong>${o.paciente_nome}</strong></td>
+      <td style="color:var(--muted)">${o.descricao||'—'}</td>
+      <td style="font-weight:600">${fmtMoeda(o.valor_total)}</td>
+      <td><span class="badge badge-${o.status}">${o.status}</span></td>
+      <td>${fmtData(o.criado_em)}</td>
+      <td style="display:flex;gap:6px">
+        ${o.status==='pendente'?`<button class="btn" style="padding:5px 10px;font-size:12px" onclick="status(${o.id},'aprovado')">Aprovar</button><button class="btn btn-danger" style="padding:5px 10px;font-size:12px" onclick="status(${o.id},'recusado')">Recusar</button>`:''}
+      </td>
+    </tr>`).join('');
+  }
+}
+function abrir(){itens=[];renderItens();document.getElementById('modal').classList.add('open');}
+function fechar(){document.getElementById('modal').classList.remove('open');}
+function addItem(){itens.push({descricao:'',procedimento_id:null,quantidade:1,valor_unitario:0});renderItens();}
+function renderItens(){
+  const c=document.getElementById('itens-container');
+  c.innerHTML=itens.map((it,i)=>`<div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center">
+    <input placeholder="Descrição" value="${it.descricao}" oninput="itens[${i}].descricao=this.value" style="font-size:13px;padding:8px 10px"/>
+    <input type="number" placeholder="Qtd" value="${it.quantidade}" oninput="itens[${i}].quantidade=parseInt(this.value)||1;calcTotal()" style="font-size:13px;padding:8px 10px"/>
+    <input type="number" placeholder="R$" value="${it.valor_unitario}" oninput="itens[${i}].valor_unitario=parseFloat(this.value)||0;calcTotal()" style="font-size:13px;padding:8px 10px"/>
+    <button onclick="itens.splice(${i},1);renderItens()" style="background:none;border:none;color:var(--error);cursor:pointer;font-size:18px;padding:4px">✕</button>
+  </div>`).join('');
+  calcTotal();
+}
+function calcTotal(){const t=itens.reduce((s,i)=>s+(i.valor_unitario*i.quantidade),0);document.getElementById('total-orc').textContent=fmtMoeda(t);}
+async function salvar(){
+  const btn=document.getElementById('btn-salvar');
+  const pac=document.getElementById('o-pac').value;
+  if(!pac){document.getElementById('msg').innerHTML='<div class="msg error">Selecione um paciente</div>';return;}
+  btn.disabled=true;btn.textContent='Salvando...';
+  const res=await api('/api/orcamentos',{method:'POST',body:JSON.stringify({paciente_id:parseInt(pac),descricao:document.getElementById('o-desc').value,validade:document.getElementById('o-val').value||null,itens})});
+  btn.disabled=false;btn.textContent='Salvar orçamento';
+  if(res){fechar();carregar();}
+}
+async function status(id,s){await api('/api/orcamentos/'+id+'/status',{method:'PUT',body:JSON.stringify({status:s})});carregar();}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===e.currentTarget)fechar();});
+carregar();
+</script></body></html>
