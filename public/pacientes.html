@@ -4,42 +4,19 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>ClinicOS — Pacientes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#faf8f5;
-  --surface:#ffffff;
-  --surface2:#f5f1ec;
-  --surface3:#ede8e0;
-  --border:rgba(139,90,60,.1);
-  --border2:rgba(139,90,60,.18);
-  --accent:#c1714f;
-  --accent2:#e8916e;
-  --accent-light:rgba(193,113,79,.1);
-  --gold:#b8956a;
-  --gold-light:rgba(184,149,106,.12);
-  --text:#1a1208;
-  --text2:#4a3728;
-  --text3:#9c8070;
-  --success:#5a8a5a;
-  --error:#c0392b;
-  --warning:#c47c2b;
-  --shadow:0 2px 16px rgba(139,90,60,.08);
-  --shadow2:0 8px 40px rgba(139,90,60,.14);
-  --radius:16px;--radius2:22px;--radius3:10px;
-}
+:root{--bg:#faf8f5;--surface:#fff;--surface2:#f5f1ec;--surface3:#ede8e0;--border:rgba(139,90,60,.1);--border2:rgba(139,90,60,.18);--accent:#c1714f;--accent2:#e8916e;--accent-light:rgba(193,113,79,.1);--gold:#b8956a;--text:#1a1208;--text2:#4a3728;--text3:#9c8070;--success:#5a8a5a;--error:#c0392b;--warning:#c47c2b;--shadow:0 2px 16px rgba(139,90,60,.08);--shadow2:0 8px 40px rgba(139,90,60,.14);--radius:16px;--radius2:22px;--radius3:10px}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;-webkit-font-smoothing:antialiased}
-
-/* SIDEBAR */
 .sidebar{width:264px;min-height:100vh;background:var(--text);display:flex;flex-direction:column;padding:28px 14px;position:fixed;top:0;left:0;bottom:0;overflow-y:auto}
 .logo{display:flex;align-items:center;gap:12px;padding:8px 12px;margin-bottom:36px}
 .logo-icon{width:38px;height:38px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.logo-text{font-family:'Playfair Display',serif;font-size:21px;font-weight:600;color:#fff;letter-spacing:.2px}
+.logo-text{font-family:'Playfair Display',serif;font-size:21px;font-weight:600;color:#fff}
 .logo-text span{color:var(--accent2)}
 nav{flex:1;display:flex;flex-direction:column;gap:2px}
 .nav-sec{font-size:10px;font-weight:600;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.2px;padding:18px 12px 6px}
-.nav-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius3);color:rgba(255,255,255,.55);text-decoration:none;font-size:14px;font-weight:400;transition:all .15s}
+.nav-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius3);color:rgba(255,255,255,.55);text-decoration:none;font-size:14px;transition:all .15s}
 .nav-link:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
 .nav-link.active{background:var(--accent);color:#fff;font-weight:500}
 .nav-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:rgba(255,255,255,.08)}
@@ -50,78 +27,77 @@ nav{flex:1;display:flex;flex-direction:column;gap:2px}
 .clinica-nome{font-size:13px;font-weight:500;color:#fff}
 .clinica-esp{font-size:11px;color:rgba(255,255,255,.4)}
 .btn-logout{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius3);color:rgba(255,255,255,.4);background:none;border:none;font-family:inherit;font-size:14px;cursor:pointer;transition:all .15s;width:100%}
-.btn-logout:hover{background:rgba(192,57,43,.15);color:#e88;}
-
-/* MAIN */
-.main{margin-left:264px;flex:1;padding:36px 36px;min-height:100vh}
+.btn-logout:hover{background:rgba(192,57,43,.15);color:#e88}
+.main{margin-left:264px;flex:1;padding:36px;min-height:100vh}
 .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:32px}
-.page-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:600;letter-spacing:-.3px;color:var(--text)}
-.page-subtitle{font-size:14px;color:var(--text3);margin-top:3px;font-weight:400}
-
-/* BTN */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:11px 20px;background:var(--accent);border:none;border-radius:var(--radius3);color:#fff;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;text-decoration:none;letter-spacing:.1px}
+.page-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:600;letter-spacing:-.3px}
+.page-subtitle{font-size:14px;color:var(--text3);margin-top:3px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:11px 20px;background:var(--accent);border:none;border-radius:var(--radius3);color:#fff;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;text-decoration:none}
 .btn:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(193,113,79,.3)}
-.btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.4;cursor:not-allowed}
 .btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2)}
 .btn-outline:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light);transform:none;box-shadow:none}
-.btn-danger{background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.2);color:var(--error)}
-.btn-danger:hover{background:rgba(192,57,43,.18);transform:none;box-shadow:none}
-
-/* TABLE */
-.table-wrap{background:var(--surface);border-radius:var(--radius2);box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--border)}
-table{width:100%;border-collapse:collapse}
-thead{background:var(--surface2)}
-th{padding:12px 20px;text-align:left;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.6px}
-td{padding:15px 20px;font-size:14px;border-top:1px solid var(--border);color:var(--text)}
-tr:hover td{background:var(--surface2)}
-.empty{text-align:center;padding:60px;color:var(--text3);font-size:14px}
-
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(26,18,8,.5);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .25s}
-.modal-overlay.open{opacity:1;pointer-events:all}
-.modal{background:var(--surface);border-radius:var(--radius2);padding:32px;width:100%;max-width:480px;transform:translateY(20px) scale(.97);transition:all .25s;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow2);border:1px solid var(--border)}
-.modal-overlay.open .modal{transform:translateY(0) scale(1)}
-.modal-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;margin-bottom:22px;color:var(--text)}
-.form{display:flex;flex-direction:column;gap:14px}
-.field{display:flex;flex-direction:column;gap:6px}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-label{font-size:12px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
-input,select,textarea{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius3);padding:11px 14px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:all .15s;width:100%}
-input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light);background:var(--surface)}
-input::placeholder,textarea::placeholder{color:var(--text3)}
-select option{background:var(--surface)}
-textarea{resize:vertical;min-height:80px}
-.modal-footer{display:flex;gap:10px;margin-top:22px;justify-content:flex-end}
-.msg{font-size:13px;padding:10px 14px;border-radius:var(--radius3);margin-top:4px}
-.msg.error{background:rgba(192,57,43,.07);color:var(--error);border:1px solid rgba(192,57,43,.15)}
-.msg.success{background:rgba(90,138,90,.07);color:var(--success);border:1px solid rgba(90,138,90,.15)}
-
-/* BADGE */
-.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.2px}
-.badge-agendada{background:rgba(184,149,106,.15);color:#7a5c2e}
-.badge-realizada,.badge-aprovado,.badge-ativo{background:rgba(90,138,90,.12);color:#2d6b3a}
-.badge-cancelada,.badge-recusado,.badge-critico{background:rgba(192,57,43,.1);color:var(--error)}
-.badge-pendente{background:rgba(196,124,43,.12);color:#8a5a10}
-
-/* STATS */
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px;margin-bottom:32px}
-.stat-card{background:var(--surface);border-radius:var(--radius2);padding:24px;box-shadow:var(--shadow);border:1px solid var(--border);position:relative;overflow:hidden}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
-.stat-label{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
-.stat-value{font-family:'Playfair Display',serif;font-size:38px;font-weight:600;line-height:1;color:var(--text)}
-.stat-sub{font-size:12px;color:var(--text3);margin-top:5px}
-
-/* SEARCH */
 .search-bar{display:flex;gap:10px;margin-bottom:22px}
 .search-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius3);padding:11px 16px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:all .15s;box-shadow:var(--shadow)}
 .search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
 .search-input::placeholder{color:var(--text3)}
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+/* TABELA */
+.table-wrap{background:var(--surface);border-radius:var(--radius2);box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--surface2)}
+th{padding:12px 20px;text-align:left;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.6px}
+td{padding:14px 20px;font-size:14px;border-top:1px solid var(--border)}
+tr:hover td{background:var(--surface2);cursor:pointer}
+.empty{text-align:center;padding:60px;color:var(--text3);font-size:14px}
+
+/* ALERTAS */
+.alert-tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600}
+.alert-alergia{background:rgba(192,57,43,.1);color:var(--error)}
+.alert-med{background:rgba(196,124,43,.12);color:var(--warning)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,18,8,.5);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border-radius:var(--radius2);padding:32px;width:100%;max-width:580px;transform:translateY(20px) scale(.97);transition:all .25s;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow2);border:1px solid var(--border)}
+.modal-overlay.open .modal{transform:translateY(0) scale(1)}
+.modal-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;margin-bottom:22px}
+.form{display:flex;flex-direction:column;gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+label{font-size:12px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+input,select,textarea{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius3);padding:11px 14px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:all .15s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light);background:var(--surface)}
+input::placeholder,textarea::placeholder{color:var(--text3)}
+textarea{resize:vertical;min-height:80px}
+.modal-footer{display:flex;gap:10px;margin-top:22px;justify-content:flex-end}
+.msg{font-size:13px;padding:10px 14px;border-radius:var(--radius3);margin-top:4px}
+.msg.error{background:rgba(192,57,43,.07);color:var(--error);border:1px solid rgba(192,57,43,.15)}
+.section-divider{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;padding:4px 0;border-bottom:1px solid var(--border);margin-bottom:4px}
+
+/* PERFIL MODAL */
+.perfil-header{display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.perfil-avatar{width:56px;height:56px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:24px;font-weight:600;color:#fff;flex-shrink:0}
+.perfil-nome{font-family:'Playfair Display',serif;font-size:22px;font-weight:600}
+.perfil-sub{font-size:13px;color:var(--text3);margin-top:2px}
+.alert-banner{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-radius:var(--radius3);margin-bottom:12px}
+.alert-banner.alergia{background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.2)}
+.alert-banner.medicamento{background:rgba(196,124,43,.07);border:1px solid rgba(196,124,43,.2)}
+.alert-banner-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.alert-banner-title{font-size:13px;font-weight:600;color:var(--error);margin-bottom:2px}
+.alert-banner-title.med{color:var(--warning)}
+.alert-banner-text{font-size:13px;color:var(--text2);line-height:1.5}
+.perfil-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.perfil-field{background:var(--surface2);border-radius:var(--radius3);padding:12px 14px}
+.perfil-field-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.perfil-field-value{font-size:14px;color:var(--text);font-weight:500}
+.perfil-prontuario{background:var(--surface2);border-radius:var(--radius3);padding:14px;margin-top:4px}
 </style>
 </head>
-<body><aside class="sidebar">
+<body>
+
+<aside class="sidebar">
   <div class="logo">
     <div class="logo-icon"><svg viewBox="0 0 22 22" width="22" height="22"><path d="M15 4A9 9 0 1 0 15 18" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="4" x2="20" y2="4" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="18" x2="20" y2="18" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg></div>
     <div class="logo-text">Clinic<span>OS</span></div>
@@ -129,14 +105,13 @@ textarea{resize:vertical;min-height:80px}
   <nav>
     <div class="nav-sec">Menu</div>
     <a class="nav-link" href="/dashboard.html"><span class="nav-icon">◈</span>Dashboard</a>
-<a class="nav-link active" href="/pacientes.html"><span class="nav-icon">◉</span>Pacientes</a>
-<a class="nav-link" href="/consultas.html"><span class="nav-icon">◷</span>Consultas</a>
-<a class="nav-link" href="/procedimentos.html"><span class="nav-icon">✦</span>Procedimentos</a>
-<a class="nav-link" href="/orcamentos.html"><span class="nav-icon">◎</span>Orçamentos</a>
-<a class="nav-link" href="/financeiro.html"><span class="nav-icon">◐</span>Financeiro</a>
-<a class="nav-link" href="/estoque.html"><span class="nav-icon">▣</span>Estoque</a>
-<a class="nav-link" href="/retornos.html"><span class="nav-icon">↺</span>Retornos</a>
-
+    <a class="nav-link active" href="/pacientes.html"><span class="nav-icon">◉</span>Pacientes</a>
+    <a class="nav-link" href="/consultas.html"><span class="nav-icon">◷</span>Consultas</a>
+    <a class="nav-link" href="/procedimentos.html"><span class="nav-icon">✦</span>Procedimentos</a>
+    <a class="nav-link" href="/orcamentos.html"><span class="nav-icon">◎</span>Orçamentos</a>
+    <a class="nav-link" href="/financeiro.html"><span class="nav-icon">◐</span>Financeiro</a>
+    <a class="nav-link" href="/estoque.html"><span class="nav-icon">▣</span>Estoque</a>
+    <a class="nav-link" href="/retornos.html"><span class="nav-icon">↺</span>Retornos</a>
   </nav>
   <div class="sidebar-footer">
     <div class="clinica-info">
@@ -149,64 +124,248 @@ textarea{resize:vertical;min-height:80px}
     <button class="btn-logout" onclick="logout()">⎋ Sair</button>
   </div>
 </aside>
+
 <main class="main">
   <div class="page-header">
     <div><div class="page-title">Pacientes</div><div class="page-subtitle">Gerencie os pacientes da clínica</div></div>
-    <button class="btn" onclick="abrir()">+ Novo paciente</button>
+    <button class="btn" onclick="abrirCadastro()">+ Novo paciente</button>
   </div>
-  <div class="search-bar"><input class="search-input" placeholder="Buscar paciente..." id="busca" oninput="filtrar()"/></div>
+  <div class="search-bar">
+    <input class="search-input" placeholder="Buscar paciente por nome..." id="busca" oninput="filtrar()"/>
+  </div>
   <div class="table-wrap">
-    <table><thead><tr><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Nascimento</th><th></th></tr></thead>
-    <tbody id="tbody"><tr><td colspan="5" class="empty">Carregando...</td></tr></tbody></table>
+    <table>
+      <thead><tr><th>Nome</th><th>Telefone</th><th>CPF</th><th>Alertas</th><th>Nascimento</th></tr></thead>
+      <tbody id="tbody"><tr><td colspan="5" class="empty">Carregando...</td></tr></tbody>
+    </table>
   </div>
 </main>
-<div class="modal-overlay" id="modal">
+
+<!-- MODAL CADASTRO/EDITAR -->
+<div class="modal-overlay" id="modal-cad">
   <div class="modal">
-    <div class="modal-title">Novo Paciente</div>
+    <div class="modal-title" id="cad-title">Novo Paciente</div>
     <div class="form">
-      <div class="field"><label>Nome completo</label><input id="p-nome" placeholder="Nome do paciente"/></div>
+      <div class="section-divider">Dados pessoais</div>
+      <div class="field"><label>Nome completo *</label><input id="p-nome" placeholder="Nome do paciente"/></div>
+      <div class="field-row">
+        <div class="field"><label>CPF</label><input id="p-cpf" placeholder="000.000.000-00"/></div>
+        <div class="field"><label>RG</label><input id="p-rg" placeholder="00.000.000-0"/></div>
+      </div>
       <div class="field-row">
         <div class="field"><label>Telefone</label><input id="p-tel" placeholder="(11) 99999-9999"/></div>
-        <div class="field"><label>CPF</label><input id="p-cpf" placeholder="000.000.000-00"/></div>
+        <div class="field"><label>Data de nascimento</label><input id="p-nasc" type="date"/></div>
       </div>
       <div class="field"><label>E-mail</label><input id="p-email" type="email" placeholder="email@exemplo.com"/></div>
-      <div class="field"><label>Data de nascimento</label><input id="p-nasc" type="date"/></div>
-      <div class="field"><label>Endereço</label><input id="p-end" placeholder="Rua, número, bairro"/></div>
-      <div class="field"><label>Observações</label><textarea id="p-obs" placeholder="Observações clínicas..."></textarea></div>
-      <div id="msg"></div>
+      <div class="field"><label>Endereço</label><input id="p-end" placeholder="Rua, número, bairro, cidade"/></div>
+
+      <div class="section-divider" style="margin-top:8px">Saúde</div>
+      <div class="field">
+        <label>⚠️ Alergias</label>
+        <textarea id="p-alergias" placeholder="Ex: Penicilina, látex, dipirona... (deixe vazio se não houver)"></textarea>
+      </div>
+      <div class="field">
+        <label>💊 Medicamentos em uso</label>
+        <textarea id="p-meds" placeholder="Ex: Losartana 50mg, Metformina... (deixe vazio se não houver)"></textarea>
+      </div>
+
+      <div class="section-divider" style="margin-top:8px">Prontuário</div>
+      <div class="field">
+        <label>Prontuário / Histórico clínico</label>
+        <textarea id="p-prontuario" placeholder="Histórico clínico, observações importantes..." style="min-height:100px"></textarea>
+      </div>
+      <div class="field">
+        <label>Observações gerais</label>
+        <textarea id="p-obs" placeholder="Outras observações..."></textarea>
+      </div>
+      <div id="msg-cad"></div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline" onclick="fechar()">Cancelar</button>
-      <button class="btn" id="btn-s" onclick="salvar()">Salvar</button>
+      <button class="btn btn-outline" onclick="fecharCadastro()">Cancelar</button>
+      <button class="btn" id="btn-salvar" onclick="salvar()">Salvar paciente</button>
     </div>
   </div>
 </div>
+
+<!-- MODAL PERFIL -->
+<div class="modal-overlay" id="modal-perfil">
+  <div class="modal" style="max-width:600px">
+    <div class="perfil-header">
+      <div class="perfil-avatar" id="perf-av">P</div>
+      <div>
+        <div class="perfil-nome" id="perf-nome">—</div>
+        <div class="perfil-sub" id="perf-sub">—</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px">
+        <button class="btn btn-outline" style="padding:7px 14px;font-size:13px" onclick="editarPerfil()">Editar</button>
+        <button class="btn btn-outline" style="padding:7px 14px;font-size:13px" onclick="fecharPerfil()">✕</button>
+      </div>
+    </div>
+
+    <!-- Alertas -->
+    <div id="perf-alertas"></div>
+
+    <!-- Dados -->
+    <div class="perfil-grid" id="perf-dados"></div>
+
+    <!-- Prontuário -->
+    <div id="perf-prontuario-wrap" style="display:none">
+      <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Prontuário</div>
+      <div class="perfil-prontuario" id="perf-prontuario"></div>
+    </div>
+  </div>
+</div>
+
 <script>
 const API='https://clinicos-backend-production-68fe.up.railway.app';
 const token=localStorage.getItem('token');
 if(!token)window.location.href='/login.html';
 const clinica=JSON.parse(localStorage.getItem('clinica')||'{}');
-if(document.getElementById('clinica-nome'))document.getElementById('clinica-nome').textContent=clinica.nome||'Clínica';
-if(document.getElementById('clinica-esp'))document.getElementById('clinica-esp').textContent=clinica.especialidade||'';
-if(document.getElementById('avatar'))document.getElementById('avatar').textContent=(clinica.nome||'C')[0].toUpperCase();
+document.getElementById('clinica-nome').textContent=clinica.nome||'Clínica';
+document.getElementById('clinica-esp').textContent=clinica.especialidade||'';
+document.getElementById('avatar').textContent=(clinica.nome||'C')[0].toUpperCase();
 function logout(){localStorage.clear();window.location.href='/login.html';}
-async function api(path,opts={}){
-  const res=await fetch(API+path,{headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},...opts});
-  if(res.status===401){logout();return null;}
-  return res.json();
-}
-function fmtMoeda(v){return 'R$ '+parseFloat(v||0).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+async function apiFetch(path,opts={}){const res=await fetch(API+path,{headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},...opts});if(res.status===401){logout();return null;}return res.json();}
 function fmtData(d){if(!d)return '—';return new Date(d).toLocaleDateString('pt-BR');}
-function fmtDH(d){if(!d)return '—';const dt=new Date(d);return dt.toLocaleDateString('pt-BR')+' '+dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
 
-let todos=[];
-async function carregar(){const data=await api('/api/pacientes');if(data){todos=data;renderizar(data);}}
-function filtrar(){const q=document.getElementById('busca').value.toLowerCase();renderizar(todos.filter(p=>p.nome.toLowerCase().includes(q)));}
-function renderizar(lista){const tb=document.getElementById('tbody');if(!lista.length){tb.innerHTML='<tr><td colspan="5" class="empty">Nenhum paciente cadastrado</td></tr>';return;}tb.innerHTML=lista.map(p=>`<tr><td style="font-weight:500">${p.nome}</td><td style="color:var(--text2)">${p.telefone||'—'}</td><td style="color:var(--text3)">${p.email||'—'}</td><td style="color:var(--text3)">${fmtData(p.data_nascimento)}</td><td><button class="btn btn-outline" style="padding:6px 12px;font-size:13px" onclick="editar(${p.id})">Editar</button></td></tr>`).join('');}
-function abrir(){document.getElementById('modal').classList.add('open');}
-function fechar(){document.getElementById('modal').classList.remove('open');}
-function editar(id){const p=todos.find(x=>x.id===id);if(!p)return;document.getElementById('p-nome').value=p.nome||'';document.getElementById('p-tel').value=p.telefone||'';document.getElementById('p-cpf').value=p.cpf||'';document.getElementById('p-email').value=p.email||'';document.getElementById('p-nasc').value=p.data_nascimento||'';document.getElementById('p-end').value=p.endereco||'';document.getElementById('p-obs').value=p.observacoes||'';document.getElementById('modal').classList.add('open');}
-async function salvar(){const btn=document.getElementById('btn-s');const nome=document.getElementById('p-nome').value.trim();if(!nome){document.getElementById('msg').innerHTML='<div class="msg error">Informe o nome</div>';return;}btn.disabled=true;btn.textContent='Salvando...';const res=await api('/api/pacientes',{method:'POST',body:JSON.stringify({nome,telefone:document.getElementById('p-tel').value,cpf:document.getElementById('p-cpf').value,email:document.getElementById('p-email').value,data_nascimento:document.getElementById('p-nasc').value||null,endereco:document.getElementById('p-end').value,observacoes:document.getElementById('p-obs').value})});btn.disabled=false;btn.textContent='Salvar';if(res){fechar();carregar();}}
-document.getElementById('modal').addEventListener('click',e=>{if(e.target===e.currentTarget)fechar();});
+let todos=[], pacienteAtual=null, editId=null;
+
+async function carregar(){
+  const data=await apiFetch('/api/pacientes');
+  if(data){todos=data;renderizar(data);}
+}
+
+function filtrar(){
+  const q=document.getElementById('busca').value.toLowerCase();
+  renderizar(todos.filter(p=>p.nome.toLowerCase().includes(q)));
+}
+
+function renderizar(lista){
+  const tb=document.getElementById('tbody');
+  if(!lista.length){tb.innerHTML='<tr><td colspan="5" class="empty">Nenhum paciente cadastrado</td></tr>';return;}
+  tb.innerHTML=lista.map(p=>{
+    let alertas='';
+    if(p.alergias)alertas+=`<span class="alert-tag alert-alergia">⚠️ Alergia</span> `;
+    if(p.medicamentos)alertas+=`<span class="alert-tag alert-med">💊 Medicamento</span>`;
+    return `<tr onclick="abrirPerfil(${p.id})">
+      <td style="font-weight:500">${p.nome}</td>
+      <td style="color:var(--text2)">${p.telefone||'—'}</td>
+      <td style="color:var(--text2)">${p.cpf||'—'}</td>
+      <td>${alertas||'<span style="color:var(--text3);font-size:12px">—</span>'}</td>
+      <td style="color:var(--text3)">${fmtData(p.data_nascimento)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function abrirCadastro(){
+  editId=null;
+  document.getElementById('cad-title').textContent='Novo Paciente';
+  ['p-nome','p-cpf','p-rg','p-tel','p-email','p-nasc','p-end','p-alergias','p-meds','p-prontuario','p-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('msg-cad').innerHTML='';
+  document.getElementById('modal-cad').classList.add('open');
+}
+
+function fecharCadastro(){document.getElementById('modal-cad').classList.remove('open');}
+
+function abrirPerfil(id){
+  const p=todos.find(x=>x.id===id);
+  if(!p)return;
+  pacienteAtual=p;
+
+  document.getElementById('perf-av').textContent=p.nome[0].toUpperCase();
+  document.getElementById('perf-nome').textContent=p.nome;
+  document.getElementById('perf-sub').textContent=[p.email,p.telefone].filter(Boolean).join(' · ')||'Sem contato cadastrado';
+
+  // Alertas
+  let alertasHtml='';
+  if(p.alergias){
+    alertasHtml+=`<div class="alert-banner alergia">
+      <div class="alert-banner-icon">⚠️</div>
+      <div><div class="alert-banner-title">ATENÇÃO — ALERGIA</div><div class="alert-banner-text">${p.alergias}</div></div>
+    </div>`;
+  }
+  if(p.medicamentos){
+    alertasHtml+=`<div class="alert-banner medicamento">
+      <div class="alert-banner-icon">💊</div>
+      <div><div class="alert-banner-title med">MEDICAMENTOS EM USO</div><div class="alert-banner-text">${p.medicamentos}</div></div>
+    </div>`;
+  }
+  document.getElementById('perf-alertas').innerHTML=alertasHtml;
+
+  // Dados
+  const campos=[
+    ['CPF',p.cpf],['RG',p.rg],
+    ['Telefone',p.telefone],['E-mail',p.email],
+    ['Nascimento',fmtData(p.data_nascimento)],['Endereço',p.endereco],
+  ];
+  document.getElementById('perf-dados').innerHTML=campos.map(([l,v])=>`
+    <div class="perfil-field">
+      <div class="perfil-field-label">${l}</div>
+      <div class="perfil-field-value">${v||'—'}</div>
+    </div>`).join('');
+
+  // Prontuário
+  if(p.prontuario){
+    document.getElementById('perf-prontuario-wrap').style.display='block';
+    document.getElementById('perf-prontuario').textContent=p.prontuario;
+  } else {
+    document.getElementById('perf-prontuario-wrap').style.display='none';
+  }
+
+  document.getElementById('modal-perfil').classList.add('open');
+}
+
+function fecharPerfil(){document.getElementById('modal-perfil').classList.remove('open');}
+
+function editarPerfil(){
+  if(!pacienteAtual)return;
+  fecharPerfil();
+  editId=pacienteAtual.id;
+  const p=pacienteAtual;
+  document.getElementById('cad-title').textContent='Editar Paciente';
+  document.getElementById('p-nome').value=p.nome||'';
+  document.getElementById('p-cpf').value=p.cpf||'';
+  document.getElementById('p-rg').value=p.rg||'';
+  document.getElementById('p-tel').value=p.telefone||'';
+  document.getElementById('p-email').value=p.email||'';
+  document.getElementById('p-nasc').value=p.data_nascimento?p.data_nascimento.split('T')[0]:'';
+  document.getElementById('p-end').value=p.endereco||'';
+  document.getElementById('p-alergias').value=p.alergias||'';
+  document.getElementById('p-meds').value=p.medicamentos||'';
+  document.getElementById('p-prontuario').value=p.prontuario||'';
+  document.getElementById('p-obs').value=p.observacoes||'';
+  document.getElementById('msg-cad').innerHTML='';
+  document.getElementById('modal-cad').classList.add('open');
+}
+
+async function salvar(){
+  const btn=document.getElementById('btn-salvar');
+  const nome=document.getElementById('p-nome').value.trim();
+  if(!nome){document.getElementById('msg-cad').innerHTML='<div class="msg error">Informe o nome do paciente</div>';return;}
+  btn.disabled=true;btn.textContent='Salvando...';
+  const body={
+    nome,
+    cpf:document.getElementById('p-cpf').value,
+    rg:document.getElementById('p-rg').value,
+    telefone:document.getElementById('p-tel').value,
+    email:document.getElementById('p-email').value,
+    data_nascimento:document.getElementById('p-nasc').value||null,
+    endereco:document.getElementById('p-end').value,
+    alergias:document.getElementById('p-alergias').value,
+    medicamentos:document.getElementById('p-meds').value,
+    prontuario:document.getElementById('p-prontuario').value,
+    observacoes:document.getElementById('p-obs').value,
+  };
+  const res=editId
+    ?await apiFetch('/api/pacientes/'+editId,{method:'PUT',body:JSON.stringify(body)})
+    :await apiFetch('/api/pacientes',{method:'POST',body:JSON.stringify(body)});
+  btn.disabled=false;btn.textContent='Salvar paciente';
+  if(res){fecharCadastro();carregar();}
+}
+
+document.getElementById('modal-cad').addEventListener('click',e=>{if(e.target===e.currentTarget)fecharCadastro();});
+document.getElementById('modal-perfil').addEventListener('click',e=>{if(e.target===e.currentTarget)fecharPerfil();});
 carregar();
-</script></body></html>
+</script>
+</body>
+</html>
