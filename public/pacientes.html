@@ -73,23 +73,19 @@
 <body>
 
 <aside class="sidebar">
-  <div class="logo">
-    <div class="logo-icon">🦷</div>
-    <div class="logo-text">Clinic<span>OS</span></div>
-  </div>
-  <nav>
-    <div class="nav-section">Principal</div>
-    <a class="nav-link" href="/dashboard.html"><span class="icon">◈</span> Dashboard</a>
-    <a class="nav-link active" href="/pacientes.html"><span class="icon">◉</span> Pacientes</a>
-    <a class="nav-link" href="/consultas.html"><span class="icon">◷</span> Consultas</a>
-  </nav>
-  <div class="sidebar-footer">
-    <div class="clinica-info">
-      <div class="avatar" id="avatar">C</div>
-      <div>
-        <div class="clinica-nome" id="clinica-nome">Clínica</div>
-        <div class="clinica-plano" id="clinica-plano">starter</div>
+      <div class="logo" style="display:flex;align-items:center;gap:12px;">
+      <div style="width:36px;height:36px;background:#4fd1c5;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 36 36" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 25 8 A 12 12 0 1 0 25 28" fill="none" stroke="#0a0d12" stroke-width="4" stroke-linecap="round"/>
+          <line x1="25" y1="8" x2="32" y2="8" stroke="#0a0d12" stroke-width="4" stroke-linecap="round"/>
+          <line x1="25" y1="28" x2="32" y2="28" stroke="#0a0d12" stroke-width="4" stroke-linecap="round"/>
+        </svg>
       </div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;">
+        Clinic<span style="color:#4fd1c5;">OS</span>
+      </div>
+    </div>
+
     </div>
     <button class="btn-logout" onclick="logout()"><span>⎋</span> Sair</button>
   </div>
