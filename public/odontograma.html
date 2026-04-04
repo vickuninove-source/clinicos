@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ClinicOS — Odontograma</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#faf8f5;--surface:#fff;--surface2:#f5f1ec;--border:rgba(139,90,60,.1);--border2:rgba(139,90,60,.18);--accent:#c1714f;--accent2:#e8916e;--accent-light:rgba(193,113,79,.1);--text:#1a1208;--text2:#4a3728;--text3:#9c8070;--shadow:0 2px 16px rgba(139,90,60,.08);--radius2:22px;--radius3:10px}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;-webkit-font-smoothing:antialiased}
+.sidebar{width:264px;min-height:100vh;background:var(--text);display:flex;flex-direction:column;padding:28px 14px;position:fixed;top:0;left:0;bottom:0;overflow-y:auto}
+.logo{display:flex;align-items:center;gap:12px;padding:8px 12px;margin-bottom:36px}
+.logo-icon{width:38px;height:38px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-text{font-family:'Playfair Display',serif;font-size:21px;font-weight:600;color:#fff}
+.logo-text span{color:var(--accent2)}
+nav{flex:1;display:flex;flex-direction:column;gap:2px}
+.nav-sec{font-size:10px;font-weight:600;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.2px;padding:18px 12px 6px}
+.nav-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:rgba(255,255,255,.55);text-decoration:none;font-size:14px;transition:all .15s}
+.nav-link:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
+.nav-link.active{background:var(--accent);color:#fff;font-weight:500}
+.nav-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:rgba(255,255,255,.08)}
+.nav-link.active .nav-icon{background:rgba(255,255,255,.2)}
+.sidebar-footer{border-top:1px solid rgba(255,255,255,.08);padding-top:14px;margin-top:14px}
+.clinica-info{padding:10px 12px;display:flex;align-items:center;gap:10px}
+.avatar{width:34px;height:34px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff;flex-shrink:0}
+.clinica-nome{font-size:13px;font-weight:500;color:#fff}
+.clinica-esp{font-size:11px;color:rgba(255,255,255,.4)}
+.btn-logout{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;color:rgba(255,255,255,.4);background:none;border:none;font-family:inherit;font-size:14px;cursor:pointer;transition:all .15s;width:100%}
+.btn-logout:hover{background:rgba(192,57,43,.15);color:#e88}
+.main{margin-left:264px;flex:1;padding:36px;min-height:100vh}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px}
+.page-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:600;letter-spacing:-.3px}
+.page-subtitle{font-size:14px;color:var(--text3);margin-top:3px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:11px 20px;background:var(--accent);border:none;border-radius:var(--radius3);color:#fff;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s}
+.btn:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light);transform:none}
+
+/* ODONTOGRAMA */
+.odonto-wrap{background:var(--surface);border-radius:var(--radius2);box-shadow:var(--shadow);border:1px solid var(--border);padding:24px;margin-bottom:24px}
+.odonto-label{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;text-align:center;margin-bottom:12px}
+.odonto-row{display:flex;justify-content:center;gap:4px;margin-bottom:4px}
+.odonto-divider{border-top:2px dashed var(--border2);margin:8px 0}
+
+.dente-wrap{display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:2px}
+.dente-numero{font-size:10px;color:var(--text3);font-weight:600;margin-bottom:3px;text-align:center}
+.dente-svg{width:36px;height:36px;position:relative}
+.dente-svg svg{width:100%;height:100%}
+
+/* Faces do dente */
+.face{cursor:pointer;transition:fill .15s}
+.face:hover{opacity:.8}
+
+/* Legenda */
+.legenda{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);cursor:pointer;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);transition:all .15s}
+.leg-item:hover{border-color:var(--border2)}
+.leg-item.selected{border-color:var(--accent);background:var(--accent-light)}
+.leg-dot{width:14px;height:14px;border-radius:3px;flex-shrink:0}
+
+/* Anotações */
+.anotacoes-wrap{background:var(--surface);border-radius:var(--radius2);box-shadow:var(--shadow);border:1px solid var(--border);padding:24px}
+.anotacoes-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;margin-bottom:16px}
+.anotacao-item{padding:12px 16px;border-radius:var(--radius3);background:var(--surface2);border:1px solid var(--border);margin-bottom:8px;display:flex;align-items:flex-start;gap:12px}
+.anotacao-dente{font-weight:700;font-size:16px;color:var(--accent);min-width:32px}
+.anotacao-texto{font-size:13px;color:var(--text2);line-height:1.5}
+.anotacao-status{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;margin-top:4px;display:inline-block}
+.empty-anotacoes{text-align:center;padding:32px;color:var(--text3);font-size:14px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,18,8,.5);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border-radius:var(--radius2);padding:28px;width:100%;max-width:420px;transform:translateY(16px) scale(.97);transition:all .25s;box-shadow:0 8px 40px rgba(139,90,60,.14)}
+.modal-overlay.open .modal{transform:translateY(0) scale(1)}
+.modal-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;margin-bottom:16px}
+.form{display:flex;flex-direction:column;gap:12px}
+.field{display:flex;flex-direction:column;gap:5px}
+label{font-size:12px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+input,select,textarea{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius3);padding:10px 14px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:all .15s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light);background:var(--surface)}
+textarea{resize:vertical;min-height:80px}
+.modal-footer{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon"><svg viewBox="0 0 22 22" width="22" height="22"><path d="M15 4A9 9 0 1 0 15 18" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="4" x2="20" y2="4" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="18" x2="20" y2="18" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg></div>
+    <div class="logo-text">Clinic<span>OS</span></div>
+  </div>
+  <nav>
+    <div class="nav-sec">Menu</div>
+    <a class="nav-link" href="/dashboard.html"><span class="nav-icon">◈</span>Início</a>
+    <a class="nav-link active" href="/pacientes.html"><span class="nav-icon">◉</span>Pacientes</a>
+    <a class="nav-link" href="/consultas.html"><span class="nav-icon">◷</span>Consultas</a>
+    <a class="nav-link" href="/procedimentos.html"><span class="nav-icon">✦</span>Procedimentos</a>
+    <a class="nav-link" href="/orcamentos.html"><span class="nav-icon">◎</span>Orçamentos</a>
+    <a class="nav-link" href="/financeiro.html"><span class="nav-icon">◐</span>Financeiro</a>
+    <a class="nav-link" href="/estoque.html"><span class="nav-icon">▣</span>Estoque</a>
+    <a class="nav-link" href="/retornos.html"><span class="nav-icon">↺</span>Retornos</a>
+    <a class="nav-link" href="/usuarios.html"><span class="nav-icon">👤</span>Usuários</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="clinica-info">
+      <div class="avatar" id="avatar">C</div>
+      <div>
+        <div class="clinica-nome" id="clinica-nome">Clínica</div>
+        <div class="clinica-esp" id="clinica-esp"></div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="logout()" style="background:none;color:rgba(255,255,255,.4)">⎋ Sair</button>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="page-header">
+    <div>
+      <div class="page-title" id="pac-nome">Odontograma</div>
+      <div class="page-subtitle" id="pac-info">Carregando...</div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-outline" onclick="window.location.href='/pacientes.html'">← Voltar</button>
+      <button class="btn btn-outline" onclick="limparTudo()">🗑 Limpar tudo</button>
+      <button class="btn" onclick="salvarTudo()">💾 Salvar</button>
+    </div>
+  </div>
+
+  <!-- Legenda / Status -->
+  <div style="background:var(--surface);border-radius:var(--radius2);box-shadow:var(--shadow);border:1px solid var(--border);padding:20px;margin-bottom:20px">
+    <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">Status — clique para selecionar e depois clique no dente</div>
+    <div class="legenda" id="legenda"></div>
+  </div>
+
+  <!-- Odontograma -->
+  <div class="odonto-wrap">
+    <div class="odonto-label">Superior — Permanente</div>
+    <div class="odonto-row" id="row-sup-perm"></div>
+    <div class="odonto-divider"></div>
+    <div class="odonto-row" id="row-inf-perm"></div>
+    <div class="odonto-label" style="margin-top:12px">Inferior — Permanente</div>
+
+    <div style="height:24px"></div>
+
+    <div class="odonto-label">Superior — Decíduo (Leite)</div>
+    <div class="odonto-row" id="row-sup-dec"></div>
+    <div class="odonto-divider"></div>
+    <div class="odonto-row" id="row-inf-dec"></div>
+    <div class="odonto-label" style="margin-top:12px">Inferior — Decíduo (Leite)</div>
+  </div>
+
+  <!-- Anotações -->
+  <div class="anotacoes-wrap">
+    <div class="anotacoes-title">Anotações por dente</div>
+    <div id="anotacoes-lista"><div class="empty-anotacoes">Nenhuma anotação. Clique em um dente para anotar.</div></div>
+  </div>
+</main>
+
+<!-- Modal anotação -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title" id="modal-dente-title">Dente 11</div>
+    <div class="form">
+      <div class="field">
+        <label>Face</label>
+        <select id="m-face">
+          <option value="vestibular">Vestibular</option>
+          <option value="lingual">Lingual / Palatina</option>
+          <option value="mesial">Mesial</option>
+          <option value="distal">Distal</option>
+          <option value="oclusal">Oclusal / Incisal</option>
+          <option value="geral">Geral (dente todo)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select id="m-status"></select>
+      </div>
+      <div class="field">
+        <label>Anotação</label>
+        <textarea id="m-anotacao" placeholder="Descreva o tratamento, observação..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
+      <button class="btn" onclick="salvarAnotacao()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://clinicos-backend-production-68fe.up.railway.app';
+const token = localStorage.getItem('token');
+if (!token) window.location.href = '/login.html';
+const clinica = JSON.parse(localStorage.getItem('clinica') || '{}');
+if (document.getElementById('clinica-nome')) document.getElementById('clinica-nome').textContent = clinica.nome || 'Clínica';
+if (document.getElementById('clinica-esp')) document.getElementById('clinica-esp').textContent = clinica.especialidade || '';
+if (document.getElementById('avatar')) document.getElementById('avatar').textContent = (clinica.nome || 'C')[0].toUpperCase();
+function logout() { localStorage.clear(); window.location.href = '/login.html'; }
+async function apiFetch(path, opts = {}) {
+  const res = await fetch(API + path, { headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }, ...opts });
+  if (res.status === 401) { logout(); return null; }
+  return res.json();
+}
+
+// Pega ID do paciente da URL
+const params = new URLSearchParams(window.location.search);
+const pacId = params.get('id');
+if (!pacId) window.location.href = '/pacientes.html';
+
+// Status disponíveis
+const STATUS = [
+  { key: 'hígido', label: 'Hígido (Saudável)', cor: '#e8f5e9', corTexto: '#2d6b3a' },
+  { key: 'cariado', label: 'Cariado', cor: '#ff6b35', corTexto: '#fff' },
+  { key: 'restaurado', label: 'Restaurado', cor: '#4a90d9', corTexto: '#fff' },
+  { key: 'extraido', label: 'Extraído', cor: '#1a1208', corTexto: '#fff' },
+  { key: 'ausente', label: 'Ausente (congênito)', cor: '#9c8070', corTexto: '#fff' },
+  { key: 'fraturado', label: 'Fraturado', cor: '#f44336', corTexto: '#fff' },
+  { key: 'tratamento_canal', label: 'Tratamento de Canal', cor: '#9c27b0', corTexto: '#fff' },
+  { key: 'coroa', label: 'Coroa / Prótese', cor: '#ffd700', corTexto: '#1a1208' },
+  { key: 'implante', label: 'Implante', cor: '#00bcd4', corTexto: '#fff' },
+  { key: 'selante', label: 'Selante', cor: '#8bc34a', corTexto: '#fff' },
+  { key: 'mobilidade', label: 'Mobilidade', cor: '#ff9800', corTexto: '#fff' },
+  { key: 'normal', label: 'Limpar marcação', cor: '#faf8f5', corTexto: '#9c8070' },
+];
+
+let statusSelecionado = 'cariado';
+let odontogramaData = {}; // { "11_vestibular": {status, anotacao, cor} }
+let denteModal = null;
+
+// Dentes permanentes
+const PERMANENTES_SUP = [18,17,16,15,14,13,12,11,21,22,23,24,25,26,27,28];
+const PERMANENTES_INF = [48,47,46,45,44,43,42,41,31,32,33,34,35,36,37,38];
+// Dentes decíduos
+const DECIDUOS_SUP = [55,54,53,52,51,61,62,63,64,65];
+const DECIDUOS_INF = [85,84,83,82,81,71,72,73,74,75];
+
+// Faces
+const FACES = ['vestibular','lingual','mesial','distal','oclusal'];
+
+function getCorDente(dente) {
+  // Verifica se alguma face tem marcação
+  for (const face of FACES) {
+    const key = `${dente}_${face}`;
+    if (odontogramaData[key] && odontogramaData[key].status !== 'normal') {
+      return odontogramaData[key].cor;
+    }
+  }
+  return null;
+}
+
+function getStatusCor(statusKey) {
+  const s = STATUS.find(x => x.key === statusKey);
+  return s ? s.cor : '#faf8f5';
+}
+
+function renderLegenda() {
+  const el = document.getElementById('legenda');
+  el.innerHTML = STATUS.map(s => `
+    <div class="leg-item ${statusSelecionado === s.key ? 'selected' : ''}" onclick="selecionarStatus('${s.key}')">
+      <div class="leg-dot" style="background:${s.cor};border:1px solid rgba(0,0,0,.1)"></div>
+      <span>${s.label}</span>
+    </div>`).join('');
+}
+
+function selecionarStatus(key) {
+  statusSelecionado = key;
+  renderLegenda();
+}
+
+function svgDente(numero) {
+  const faces_cores = {};
+  FACES.forEach(f => {
+    const key = `${numero}_${f}`;
+    faces_cores[f] = odontogramaData[key]?.status !== 'normal' && odontogramaData[key]?.cor
+      ? odontogramaData[key].cor
+      : '#fff';
+  });
+
+  const border = '#c8b8a8';
+  return `<svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+    <!-- Vestibular (top) -->
+    <polygon points="18,0 36,10 18,18 0,10" fill="${faces_cores.vestibular}" stroke="${border}" stroke-width=".8" class="face" onclick="cliqueFace(${numero},'vestibular')"/>
+    <!-- Lingual (bottom) -->
+    <polygon points="18,36 36,26 18,18 0,26" fill="${faces_cores.lingual}" stroke="${border}" stroke-width=".8" class="face" onclick="cliqueFace(${numero},'lingual')"/>
+    <!-- Mesial (left) -->
+    <polygon points="0,10 18,18 0,26" fill="${faces_cores.mesial}" stroke="${border}" stroke-width=".8" class="face" onclick="cliqueFace(${numero},'mesial')"/>
+    <!-- Distal (right) -->
+    <polygon points="36,10 18,18 36,26" fill="${faces_cores.distal}" stroke="${border}" stroke-width=".8" class="face" onclick="cliqueFace(${numero},'distal')"/>
+    <!-- Oclusal (center) -->
+    <polygon points="18,10 26,18 18,26 10,18" fill="${faces_cores.oclusal}" stroke="${border}" stroke-width=".8" class="face" onclick="cliqueFace(${numero},'oclusal')"/>
+    <!-- Border -->
+    <rect x="0" y="0" width="36" height="36" fill="none" stroke="${border}" stroke-width="1"/>
+  </svg>`;
+}
+
+function renderDentes(rowId, dentes) {
+  const row = document.getElementById(rowId);
+  row.innerHTML = dentes.map(n => `
+    <div class="dente-wrap">
+      <div class="dente-numero">${n}</div>
+      <div class="dente-svg" id="dente-${n}">${svgDente(n)}</div>
+    </div>`).join('');
+}
+
+function cliqueFace(dente, face) {
+  if (statusSelecionado === 'normal') {
+    // Limpar
+    const key = `${dente}_${face}`;
+    delete odontogramaData[key];
+    atualizarDente(dente);
+    renderAnotacoes();
+    return;
+  }
+
+  // Abrir modal para anotar
+  denteModal = { dente, face };
+  document.getElementById('modal-dente-title').textContent = `Dente ${dente} — ${face.charAt(0).toUpperCase() + face.slice(1)}`;
+  document.getElementById('m-face').value = face;
+
+  // Popular select de status
+  const sel = document.getElementById('m-status');
+  sel.innerHTML = STATUS.filter(s => s.key !== 'normal').map(s =>
+    `<option value="${s.key}" ${s.key === statusSelecionado ? 'selected' : ''}>${s.label}</option>`
+  ).join('');
+
+  // Se já tem anotação
+  const key = `${dente}_${face}`;
+  document.getElementById('m-anotacao').value = odontogramaData[key]?.anotacao || '';
+
+  document.getElementById('modal').classList.add('open');
+}
+
+function fecharModal() { document.getElementById('modal').classList.remove('open'); }
+
+function salvarAnotacao() {
+  if (!denteModal) return;
+  const { dente, face } = denteModal;
+  const statusKey = document.getElementById('m-status').value;
+  const cor = getStatusCor(statusKey);
+  const anotacao = document.getElementById('m-anotacao').value;
+  const key = `${dente}_${face}`;
+  odontogramaData[key] = { dente, face, status: statusKey, cor, anotacao };
+  atualizarDente(dente);
+  renderAnotacoes();
+  fecharModal();
+}
+
+function atualizarDente(numero) {
+  const el = document.getElementById(`dente-${numero}`);
+  if (el) el.innerHTML = svgDente(numero);
+}
+
+function renderAnotacoes() {
+  const lista = document.getElementById('anotacoes-lista');
+  const itens = Object.values(odontogramaData).filter(x => x.status && x.status !== 'normal');
+  if (!itens.length) {
+    lista.innerHTML = '<div class="empty-anotacoes">Nenhuma anotação. Clique em um dente para anotar.</div>';
+    return;
+  }
+  // Agrupar por dente
+  const porDente = {};
+  itens.forEach(it => {
+    if (!porDente[it.dente]) porDente[it.dente] = [];
+    porDente[it.dente].push(it);
+  });
+  lista.innerHTML = Object.entries(porDente).sort((a,b) => a[0]-b[0]).map(([dente, faces]) => `
+    <div class="anotacao-item">
+      <div class="anotacao-dente">${dente}</div>
+      <div style="flex:1">
+        ${faces.map(f => `
+          <div style="margin-bottom:6px">
+            <span style="font-size:11px;font-weight:600;background:${f.cor};color:${STATUS.find(s=>s.key===f.status)?.corTexto||'#fff'};padding:2px 8px;border-radius:5px">${f.status}</span>
+            <span style="font-size:12px;color:var(--text3);margin-left:6px">${f.face}</span>
+            ${f.anotacao ? `<div style="font-size:13px;color:var(--text2);margin-top:4px">${f.anotacao}</div>` : ''}
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+async function salvarTudo() {
+  const itens = Object.values(odontogramaData);
+  let salvos = 0;
+  for (const item of itens) {
+    await apiFetch(`/api/pacientes/${pacId}/odontograma`, {
+      method: 'POST',
+      body: JSON.stringify({ dente: item.dente, face: item.face, status: item.status, anotacao: item.anotacao, cor: item.cor })
+    });
+    salvos++;
+  }
+  alert(`✅ Odontograma salvo! ${salvos} marcações registradas.`);
+}
+
+function limparTudo() {
+  if (!confirm('Limpar todo o odontograma?')) return;
+  odontogramaData = {};
+  [PERMANENTES_SUP, PERMANENTES_INF, DECIDUOS_SUP, DECIDUOS_INF].forEach(row => {
+    row.forEach(n => atualizarDente(n));
+  });
+  renderAnotacoes();
+}
+
+async function carregarOdontograma() {
+  const data = await apiFetch(`/api/pacientes/${pacId}/odontograma`);
+  if (data && data.length) {
+    data.forEach(item => {
+      odontogramaData[`${item.dente}_${item.face}`] = {
+        dente: item.dente, face: item.face, status: item.status, anotacao: item.anotacao, cor: item.cor
+      };
+    });
+    [PERMANENTES_SUP, PERMANENTES_INF, DECIDUOS_SUP, DECIDUOS_INF].forEach(row => {
+      row.forEach(n => atualizarDente(n));
+    });
+    renderAnotacoes();
+  }
+}
+
+async function carregarPaciente() {
+  const res = await fetch(API + '/api/pacientes', { headers: { 'Authorization': 'Bearer ' + token } });
+  const pacs = await res.json();
+  const pac = pacs.find(p => String(p.id) === String(pacId));
+  if (pac) {
+    document.getElementById('pac-nome').textContent = pac.nome;
+    document.getElementById('pac-info').textContent = `Odontograma — ${pac.especialidade || clinica.especialidade || 'Odontologia'}`;
+  }
+}
+
+document.getElementById('modal').addEventListener('click', e => { if (e.target === e.currentTarget) fecharModal(); });
+
+// Init
+renderLegenda();
+renderDentes('row-sup-perm', PERMANENTES_SUP);
+renderDentes('row-inf-perm', PERMANENTES_INF);
+renderDentes('row-sup-dec', DECIDUOS_SUP);
+renderDentes('row-inf-dec', DECIDUOS_INF);
+carregarPaciente();
+carregarOdontograma();
+</script>
+</body>
+</html>

@@ -199,6 +199,7 @@ textarea{resize:vertical;min-height:80px}
       </div>
       <div style="margin-left:auto;display:flex;gap:8px">
         <button class="btn btn-outline" style="padding:7px 14px;font-size:13px" onclick="editarPerfil()">Editar</button>
+        <button class="btn" style="padding:7px 14px;font-size:13px;background:var(--accent)" onclick="abrirOdontograma()">🦷 Odontograma</button>
         <button class="btn btn-outline" style="padding:7px 14px;font-size:13px" onclick="fecharPerfil()">✕</button>
       </div>
     </div>
@@ -317,6 +318,10 @@ function abrirPerfil(id){
 }
 
 function fecharPerfil(){document.getElementById('modal-perfil').classList.remove('open');}
+function abrirOdontograma(){
+  if(!pacienteAtual)return;
+  window.location.href='/odontograma.html?id='+pacienteAtual.id;
+}
 
 function editarPerfil(){
   if(!pacienteAtual)return;
