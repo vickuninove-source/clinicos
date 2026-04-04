@@ -340,23 +340,20 @@ async function gerarPDF(id){
   doc.rect(118,fy,78,h,'F');
   doc.setFontSize(9);
   doc.setTextColor(156,128,112);
-  doc.text('Subtotal:',122,fy+8);
-  doc.setTextColor(26,18,8);
-  doc.text('R$'+sub.toFixed(2).replace('.',','),193,fy+8,{align:'right'});
+  doc.text('Subtotal: R$'+sub.toFixed(2).replace('.',','),122,fy+8);
   if(pct>0){
+    doc.setFontSize(9);
     doc.setTextColor(156,128,112);
     doc.text('Desconto ('+pct+'%):',122,fy+16);
     doc.setTextColor(192,57,43);
-    doc.text('-R$'+desc.toFixed(2).replace('.',','),193,fy+16,{align:'right'});
-    doc.setFontSize(12);
+    doc.text('-R$'+desc.toFixed(2).replace('.',','),170,fy+16);
+    doc.setFontSize(11);
     doc.setTextColor(193,113,79);
-    doc.text('TOTAL:',122,fy+25);
-    doc.text('R$'+total.toFixed(2).replace('.',','),193,fy+25,{align:'right'});
+    doc.text('TOTAL: R$'+total.toFixed(2).replace('.',','),122,fy+25);
   } else {
-    doc.setFontSize(12);
+    doc.setFontSize(11);
     doc.setTextColor(193,113,79);
-    doc.text('TOTAL:',122,fy+8);
-    doc.text('R$'+total.toFixed(2).replace('.',','),193,fy+8,{align:'right'});
+    doc.text('TOTAL: R$'+total.toFixed(2).replace('.',','),122,fy+8);
   }
 
   // Observacoes e validade
