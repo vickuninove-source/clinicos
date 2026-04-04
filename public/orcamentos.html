@@ -105,6 +105,13 @@ select option{background:var(--surface)}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script>
+window.addEventListener('error', function(e) {
+  if (e.message && e.message.includes('html2canvas')) {
+    e.preventDefault();
+  }
+});
+</script>
 </head>
 <body>
 
@@ -817,16 +824,84 @@ function buildPDFContent(orc,itens){
 }
 
 async function gerarPDF(){
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF('p','mm','a4');
-  const content=document.getElementById('pdf-content');
   const orc=window._pdfOrc;
-  
-  // Use html2canvas approach via jsPDF html method
-  doc.html(content,{
-    callback:function(d){d.save(`Orcamento_${orc.paciente_nome}_${orc.id}.pdf`);},
-    x:10,y:10,width:190,windowWidth:700
+  if(!orc){alert('Erro: orçamento não encontrado');return;}
+  const itens=window._pdfItens||[];
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+
+  // Header
+  doc.setFillColor(193,113,79);
+  doc.rect(0,0,210,38,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(20);doc.setFont('helvetica','bold');
+  doc.text('ClinicOS',14,16);
+  doc.setFontSize(10);doc.setFont('helvetica','normal');
+  doc.text('Orçamento Profissional',14,24);
+  doc.text('Nº '+String(orc.id).padStart(4,'0'),14,31);
+  doc.setFontSize(11);doc.setFont('helvetica','bold');
+  doc.text(clinica.nome||'Clínica',196,16,{align:'right'});
+  doc.setFont('helvetica','normal');doc.setFontSize(9);
+  doc.text(clinica.especialidade||'',196,23,{align:'right'});
+  doc.text(new Date().toLocaleDateString('pt-BR'),196,30,{align:'right'});
+
+  // Paciente
+  doc.setTextColor(26,18,8);
+  doc.setFillColor(245,241,236);
+  doc.rect(14,44,182,18,'F');
+  doc.setFontSize(9);doc.setTextColor(156,128,112);doc.setFont('helvetica','bold');
+  doc.text('PACIENTE',18,51);
+  doc.setTextColor(26,18,8);doc.setFont('helvetica','normal');doc.setFontSize(12);
+  doc.text(orc.paciente_nome||'—',18,59);
+
+  // Itens
+  const tableData=itens.map(i=>[
+    i.descricao||'—',
+    String(i.quantidade||1),
+    'R$ '+parseFloat(i.valor_unitario||0).toFixed(2).replace('.',','),
+    'R$ '+parseFloat(i.valor_total||0).toFixed(2).replace('.',',')
+  ]);
+
+  doc.autoTable({
+    startY:68,
+    head:[['Procedimento / Item','Qtd','Valor Unit.','Total']],
+    body:tableData.length?tableData:[['Nenhum item','—','—','—']],
+    theme:'grid',
+    headStyles:{fillColor:[193,113,79],textColor:255,fontStyle:'bold',fontSize:10},
+    bodyStyles:{fontSize:10,textColor:[26,18,8]},
+    alternateRowStyles:{fillColor:[250,248,245]},
+    columnStyles:{0:{cellWidth:90},1:{cellWidth:20,halign:'center'},2:{cellWidth:35,halign:'right'},3:{cellWidth:35,halign:'right'}},
+    margin:{left:14,right:14},
   });
+
+  const fy=doc.lastAutoTable.finalY+8;
+  const sub=parseFloat(orc.valor_total||0);
+  const desc=parseFloat(orc.valor_desconto||0);
+  const total=parseFloat(orc.valor_final||orc.valor_total||0);
+  const pct=parseFloat(orc.desconto_percentual||0);
+
+  doc.setFillColor(245,241,236);
+  doc.rect(120,fy,76,pct>0?28:14,'F');
+  doc.setFontSize(10);doc.setTextColor(156,128,112);
+  doc.text('Subtotal:',124,fy+8);
+  doc.setTextColor(26,18,8);
+  doc.text('R$ '+sub.toFixed(2).replace('.',','),193,fy+8,{align:'right'});
+  if(pct>0){
+    doc.setTextColor(156,128,112);doc.text('Desconto ('+pct+'%):',124,fy+16);
+    doc.setTextColor(192,57,43);doc.text('- R$ '+desc.toFixed(2).replace('.',','),193,fy+16,{align:'right'});
+    doc.setFontSize(12);doc.setFont('helvetica','bold');doc.setTextColor(193,113,79);
+    doc.text('TOTAL:',124,fy+26);doc.text('R$ '+total.toFixed(2).replace('.',','),193,fy+26,{align:'right'});
+  }else{
+    doc.setFontSize(12);doc.setFont('helvetica','bold');doc.setTextColor(193,113,79);
+    doc.text('TOTAL:',124,fy+8);doc.text('R$ '+total.toFixed(2).replace('.',','),193,fy+8,{align:'right'});
+  }
+
+  // Footer
+  doc.setFillColor(26,18,8);doc.rect(0,282,210,15,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(8);doc.setFont('helvetica','normal');
+  doc.text('Documento gerado pelo ClinicOS — Sistema de Gestão Clínica',105,290,{align:'center'});
+
+  doc.save('orcamento-'+String(orc.id).padStart(4,'0')+'-'+(orc.paciente_nome||'paciente').replace(/\s/g,'-')+'.pdf');
 }
 
 document.getElementById('modal-novo').addEventListener('click',e=>{if(e.target===e.currentTarget)fecharNovo();});
