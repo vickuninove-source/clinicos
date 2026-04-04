@@ -453,376 +453,6 @@ document.getElementById('o-pac').addEventListener('change',function(){
 // ── ORÇAMENTOS ──
 let itensList=[], baixaId=null, orcList=[];
 
-async function gerarPDF(id) {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-
-  // Busca dados do orçamento
-  const orcs = await api('/api/orcamentos');
-  const orc = orcs ? orcs.find(o => o.id === id) : null;
-  if (!orc) { alert('Orçamento não encontrado'); return; }
-
-  const itens = await api('/api/orcamentos/' + id + '/itens');
-
-  // Header
-  doc.setFillColor(193, 113, 79);
-  doc.rect(0, 0, 210, 40, 'F');
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(22);
-  doc.setFont('helvetica', 'bold');
-  doc.text('ClinicOS', 14, 18);
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'normal');
-  doc.text('Orçamento Profissional', 14, 27);
-  doc.text(`Nº ${String(orc.id).padStart(4,'0')}`, 14, 34);
-
-  // Data
-  doc.setFontSize(10);
-  doc.text(new Date().toLocaleDateString('pt-BR'), 196, 34, {align:'right'});
-
-  // Clínica info
-  doc.setTextColor(26, 18, 8);
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.text(clinica.nome || 'Clínica', 196, 18, {align:'right'});
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
-  doc.text(clinica.especialidade || '', 196, 25, {align:'right'});
-
-  // Paciente
-  doc.setFillColor(245, 241, 236);
-  doc.rect(14, 46, 182, 22, 'F');
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(156, 128, 112);
-  doc.text('PACIENTE', 18, 54);
-  doc.setTextColor(26, 18, 8);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(12);
-  doc.text(orc.paciente_nome || '—', 18, 62);
-
-  // Descrição
-  if (orc.descricao) {
-    doc.setFontSize(10);
-    doc.setTextColor(156, 128, 112);
-    doc.text('DESCRIÇÃO', 18, 78);
-    doc.setTextColor(74, 55, 40);
-    doc.text(orc.descricao, 18, 85);
-  }
-
-  // Itens
-  const tableData = itens ? itens.map(item => [
-    item.descricao || '—',
-    String(item.quantidade || 1),
-    'R$ ' + parseFloat(item.valor_unitario||0).toFixed(2).replace('.',','),
-    'R$ ' + parseFloat(item.valor_total||0).toFixed(2).replace('.',','),
-  ]) : [];
-
-  doc.autoTable({
-    startY: orc.descricao ? 92 : 76,
-    head: [['Procedimento / Item', 'Qtd', 'Valor Unit.', 'Total']],
-    body: tableData,
-    theme: 'grid',
-    headStyles: { fillColor: [193, 113, 79], textColor: 255, fontStyle: 'bold', fontSize: 10 },
-    bodyStyles: { fontSize: 10, textColor: [26, 18, 8] },
-    alternateRowStyles: { fillColor: [250, 248, 245] },
-    columnStyles: { 0: {cellWidth: 90}, 1: {cellWidth: 20, halign:'center'}, 2: {cellWidth: 35, halign:'right'}, 3: {cellWidth: 35, halign:'right'} },
-    margin: { left: 14, right: 14 },
-  });
-
-  const finalY = doc.lastAutoTable.finalY + 8;
-
-  // Totais
-  const subtotal = parseFloat(orc.valor_total || 0);
-  const desconto = parseFloat(orc.valor_desconto || 0);
-  const total = parseFloat(orc.valor_final || orc.valor_total || 0);
-  const pct = parseFloat(orc.desconto_percentual || 0);
-
-  doc.setFillColor(245, 241, 236);
-  doc.rect(120, finalY, 76, pct > 0 ? 30 : 16, 'F');
-
-  doc.setFontSize(10);
-  doc.setTextColor(156, 128, 112);
-  doc.text('Subtotal:', 124, finalY + 8);
-  doc.setTextColor(26, 18, 8);
-  doc.text('R$ ' + subtotal.toFixed(2).replace('.',','), 193, finalY + 8, {align:'right'});
-
-  if (pct > 0) {
-    doc.setTextColor(156, 128, 112);
-    doc.text(`Desconto (${pct}%):`, 124, finalY + 16);
-    doc.setTextColor(192, 57, 43);
-    doc.text('- R$ ' + desconto.toFixed(2).replace('.',','), 193, finalY + 16, {align:'right'});
-
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(193, 113, 79);
-    doc.text('TOTAL:', 124, finalY + 26);
-    doc.text('R$ ' + total.toFixed(2).replace('.',','), 193, finalY + 26, {align:'right'});
-  } else {
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(193, 113, 79);
-    doc.text('TOTAL:', 124, finalY + 8);
-    doc.text('R$ ' + total.toFixed(2).replace('.',','), 193, finalY + 8, {align:'right'});
-  }
-
-  // Validade
-  if (orc.validade) {
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(156, 128, 112);
-    doc.text(`Válido até: ${new Date(orc.validade).toLocaleDateString('pt-BR')}`, 14, finalY + (pct > 0 ? 28 : 16));
-  }
-
-  // Status
-  const statusY = finalY + (pct > 0 ? 40 : 26);
-  if (orc.status_pagamento) {
-    doc.setFillColor(245, 241, 236);
-    doc.rect(14, statusY, 100, 16, 'F');
-    doc.setFontSize(9);
-    doc.setTextColor(156, 128, 112);
-    doc.text('Status pagamento: ', 18, statusY + 7);
-    doc.setTextColor(26, 18, 8);
-    doc.setFont('helvetica', 'bold');
-    doc.text(orc.status_pagamento.toUpperCase(), 18 + 38, statusY + 7);
-    if (orc.forma_pagamento) {
-      doc.setFont('helvetica', 'normal');
-      doc.text(' | ' + orc.forma_pagamento + (orc.parcelas > 1 ? ' ' + orc.parcelas + 'x' : ''), 18 + 38 + doc.getTextWidth(orc.status_pagamento.toUpperCase()), statusY + 7);
-    }
-  }
-
-  // Observações
-  if (orc.observacoes) {
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(156, 128, 112);
-    doc.text('Observações: ' + orc.observacoes, 14, statusY + 24);
-  }
-
-  // Footer
-  doc.setFillColor(26, 18, 8);
-  doc.rect(0, 282, 210, 15, 'F');
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.text('Documento gerado pelo ClinicOS — Sistema de Gestão Clínica', 105, 290, {align:'center'});
-
-  doc.save(`orcamento-${String(orc.id).padStart(4,'0')}-${orc.paciente_nome?.replace(/\s/g,'-') || 'paciente'}.pdf`);
-}
-
-async function carregar(){
-  const [data,pacs]=await Promise.all([apiFetch('/api/orcamentos'),apiFetch('/api/pacientes')]);
-  if(pacs){
-    const s=document.getElementById('o-pac');
-    s.innerHTML='<option value="">Selecione...</option>'+pacs.map(p=>`<option value="${p.id}">${p.nome}</option>`).join('');
-  }
-  if(data){
-    orcList=data;
-    const tb=document.getElementById('tbody');
-    if(!data.length){tb.innerHTML='<tr><td colspan="8" class="empty">Nenhum orçamento</td></tr>';return;}
-    tb.innerHTML=data.map(o=>`<tr>
-      <td style="font-weight:500">${o.paciente_nome}</td>
-      <td style="color:var(--text3)">${o.descricao||'—'}</td>
-      <td style="color:var(--text3);font-size:12px">${fmtMoeda(o.valor_total)}</td>
-      <td style="color:var(--error);font-size:12px">${o.desconto_percentual>0?o.desconto_percentual+'%':'—'}</td>
-      <td style="font-weight:600;color:var(--accent)">${fmtMoeda(o.valor_final||o.valor_total)}</td>
-      <td><span class="badge badge-${o.status_realizacao||'a_realizar'}">${(o.status_realizacao||'a realizar').replace('_',' ')}</span></td>
-      <td><span class="badge badge-${o.status_pagamento||'pendente'}">${o.status_pagamento||'pendente'}</span></td>
-      <td style="display:flex;gap:6px">
-        <button class="btn btn-outline" style="padding:5px 10px;font-size:12px" onclick="verPDF(${o.id})">📄 PDF</button>
-        <button class="btn btn-success" style="padding:5px 10px;font-size:12px" onclick="abrirBaixa(${o.id})">Baixa</button>
-      </td>
-    </tr>`).join('');
-  }
-}
-
-function abrirNovo(){
-  itensList=[];renderItens();
-  odonto={};denteAtivo=null;
-  document.getElementById('modal-novo').classList.add('open');
-  document.getElementById('odonto-section').style.display=isOdonto?'block':'none';
-  if(isOdonto){initOdonto();renderOdonto();}
-}
-function fecharNovo(){document.getElementById('modal-novo').classList.remove('open');}
-
-function addItem(){itensList.push({descricao:'',quantidade:1,valor_unitario:0});renderItens();}
-function renderItens(){
-  document.getElementById('itens-container').innerHTML=itensList.map((it,i)=>`
-    <div style="display:grid;grid-template-columns:2fr 70px 100px 32px;gap:8px;margin-bottom:8px;align-items:center">
-      <input placeholder="Descrição" value="${it.descricao}" oninput="itensList[${i}].descricao=this.value" style="font-size:13px;padding:9px 12px"/>
-      <input type="number" placeholder="Qtd" value="${it.quantidade}" min="1" oninput="itensList[${i}].quantidade=parseInt(this.value)||1;calcTotal()" style="font-size:13px;padding:9px 12px"/>
-      <input type="number" placeholder="R$" value="${it.valor_unitario}" oninput="itensList[${i}].valor_unitario=parseFloat(this.value)||0;calcTotal()" style="font-size:13px;padding:9px 12px"/>
-      <button onclick="itensList.splice(${i},1);renderItens()" style="background:none;border:none;color:var(--error);cursor:pointer;font-size:20px">✕</button>
-    </div>`).join('');
-  calcTotal();
-}
-function calcTotal(){
-  const sub=itensList.reduce((s,i)=>s+(i.valor_unitario*i.quantidade),0);
-  const pct=parseFloat(document.getElementById('o-desc-pct').value)||0;
-  const desc=sub*pct/100;
-  document.getElementById('subtotal-txt').textContent=fmtMoeda(sub);
-  document.getElementById('desconto-txt').textContent='- '+fmtMoeda(desc);
-  document.getElementById('total-txt').textContent=fmtMoeda(sub-desc);
-}
-
-async function salvar(){
-  const btn=document.getElementById('btn-salvar');
-  const pac=document.getElementById('o-pac').value;
-  if(!pac){document.getElementById('msg-novo').innerHTML='<div class="msg error">Selecione um paciente</div>';return;}
-  btn.disabled=true;btn.textContent='Salvando...';
-  const odoJson=isOdonto?JSON.stringify(odonto):null;
-  const res=await apiFetch('/api/orcamentos',{method:'POST',body:JSON.stringify({
-    paciente_id:parseInt(pac),
-    descricao:document.getElementById('o-desc').value,
-    validade:document.getElementById('o-val').value||null,
-    desconto_percentual:parseFloat(document.getElementById('o-desc-pct').value)||0,
-    observacoes:document.getElementById('o-obs').value,
-    odontograma:odoJson,
-    itens:itensList
-  })});
-  btn.disabled=false;btn.textContent='Salvar orçamento';
-  if(res){fecharNovo();carregar();}
-}
-
-// ── BAIXA ──
-function abrirBaixa(id){baixaId=id;document.getElementById('modal-baixa').classList.add('open');}
-function fecharBaixa(){document.getElementById('modal-baixa').classList.remove('open');}
-function toggleParcelas(){document.getElementById('parcelas-field').style.display=document.getElementById('b-forma').value==='credito'?'block':'none';}
-async function confirmarBaixa(){
-  const btn=document.getElementById('btn-baixa');
-  btn.disabled=true;btn.textContent='Salvando...';
-  const res=await apiFetch('/api/orcamentos/'+baixaId+'/baixa',{method:'PUT',body:JSON.stringify({
-    status_realizacao:document.getElementById('b-realizacao').value,
-    status_pagamento:document.getElementById('b-pagamento').value,
-    forma_pagamento:document.getElementById('b-forma').value,
-    parcelas:parseInt(document.getElementById('b-parcelas').value)||1,
-  })});
-  btn.disabled=false;btn.textContent='Confirmar baixa';
-  if(res){fecharBaixa();carregar();}
-}
-
-// ── PDF ──
-async function verPDF(id){
-  const orc=orcList.find(o=>o.id===id);
-  if(!orc)return;
-  const itens=await apiFetch('/api/orcamentos/'+id+'/itens');
-  const html=buildPDFContent(orc,itens||[]);
-  document.getElementById('pdf-content').innerHTML=html;
-  document.getElementById('modal-pdf').classList.add('open');
-  window._pdfOrc=orc;
-  window._pdfItens=itens||[];
-}
-function fecharPDF(){document.getElementById('modal-pdf').classList.remove('open');}
-
-function buildPDFContent(orc,itens){
-  const hoje=new Date().toLocaleDateString('pt-BR');
-  let html=`
-    <div style="font-family:'Inter',sans-serif;color:#1a1208">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:20px;border-bottom:2px solid #c1714f">
-        <div>
-          <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:#1a1208">${clinica.nome||'Clínica'}</div>
-          <div style="font-size:13px;color:#9c8070;margin-top:4px">${clinica.especialidade||''}</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:11px;color:#9c8070">Orçamento #${orc.id}</div>
-          <div style="font-size:11px;color:#9c8070">Emitido: ${hoje}</div>
-          ${orc.validade?`<div style="font-size:11px;color:#9c8070">Válido até: ${fmtData(orc.validade)}</div>`:''}
-        </div>
-      </div>
-      <div style="margin-bottom:20px">
-        <div style="font-size:11px;font-weight:600;color:#9c8070;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Paciente</div>
-        <div style="font-size:16px;font-weight:600">${orc.paciente_nome}</div>
-        ${orc.descricao?`<div style="font-size:13px;color:#4a3728;margin-top:2px">${orc.descricao}</div>`:''}
-      </div>`;
-
-  if(itens.length){
-    html+=`<table style="width:100%;border-collapse:collapse;margin-bottom:20px">
-      <thead><tr style="background:#f5f1ec">
-        <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:#9c8070;text-transform:uppercase;letter-spacing:.5px">Procedimento</th>
-        <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:600;color:#9c8070;text-transform:uppercase;letter-spacing:.5px">Qtd</th>
-        <th style="padding:10px 14px;text-align:right;font-size:11px;font-weight:600;color:#9c8070;text-transform:uppercase;letter-spacing:.5px">Unitário</th>
-        <th style="padding:10px 14px;text-align:right;font-size:11px;font-weight:600;color:#9c8070;text-transform:uppercase;letter-spacing:.5px">Total</th>
-      </tr></thead><tbody>`;
-    itens.forEach(it=>{
-      html+=`<tr style="border-top:1px solid #f0ebe3">
-        <td style="padding:10px 14px;font-size:13px">${it.descricao||it.procedimento_nome||'—'}</td>
-        <td style="padding:10px 14px;text-align:center;font-size:13px">${it.quantidade}</td>
-        <td style="padding:10px 14px;text-align:right;font-size:13px">${fmtMoeda(it.valor_unitario)}</td>
-        <td style="padding:10px 14px;text-align:right;font-size:13px;font-weight:600">${fmtMoeda(it.valor_total)}</td>
-      </tr>`;
-    });
-    html+='</tbody></table>';
-  }
-
-  html+=`<div style="display:flex;justify-content:flex-end;margin-bottom:24px">
-    <div style="background:#f5f1ec;border-radius:12px;padding:16px 24px;min-width:240px">
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px">
-        <span style="color:#9c8070">Subtotal</span><span>${fmtMoeda(orc.valor_total)}</span>
-      </div>
-      ${orc.desconto_percentual>0?`<div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px">
-        <span style="color:#c0392b">Desconto (${orc.desconto_percentual}%)</span><span style="color:#c0392b">- ${fmtMoeda(orc.valor_desconto)}</span>
-      </div>`:''}
-      <div style="display:flex;justify-content:space-between;padding-top:10px;border-top:1px solid #e8e0d8;font-size:16px;font-weight:700">
-        <span>Total</span><span style="color:#c1714f">${fmtMoeda(orc.valor_final||orc.valor_total)}</span>
-      </div>
-    </div>
-  </div>`;
-
-  // Pagamento
-  if(orc.forma_pagamento){
-    const formas={dinheiro:'Dinheiro',pix:'PIX',debito:'Débito',credito:'Crédito',convenio:'Convênio'};
-    html+=`<div style="font-size:13px;color:#4a3728;margin-bottom:20px">
-      <strong>Forma de pagamento:</strong> ${formas[orc.forma_pagamento]||orc.forma_pagamento}
-      ${orc.forma_pagamento==='credito'&&orc.parcelas>1?` em ${orc.parcelas}x de ${fmtMoeda((orc.valor_final||orc.valor_total)/orc.parcelas)}`:''}
-    </div>`;
-  }
-
-  // Odontograma no PDF
-  if(orc.odontograma){
-    try{
-      const od=typeof orc.odontograma==='string'?JSON.parse(orc.odontograma):orc.odontograma;
-      const PROC_CORES_PDF={normal:'#e8e0d8',carie:'#e74c3c',restaurado:'#3498db',extracao:'#e67e22',coroa:'#9b59b6',implante:'#1abc9c',ausente:'#95a5a6'};
-      const makeTooth=(num)=>{
-        const d=od[num]||{V:'normal',L:'normal',M:'normal',D:'normal',O:'normal'};
-        const c=PROC_CORES_PDF;
-        return `<div style="display:flex;flex-direction:column;align-items:center;gap:2px">
-          <div style="font-size:8px;color:#9c8070;font-weight:600">${num}</div>
-          <svg viewBox="0 0 28 28" width="22" height="22">
-            <rect x=".5" y=".5" width="27" height="27" rx="3" fill="#f5f1ec" stroke="#9c8070" stroke-width=".5"/>
-            <polygon points="2,2 26,2 20,8 8,8" fill="${c[d.V]||c.normal}" stroke="#fff" stroke-width=".3"/>
-            <polygon points="8,20 20,20 26,26 2,26" fill="${c[d.L]||c.normal}" stroke="#fff" stroke-width=".3"/>
-            <polygon points="2,2 8,8 8,20 2,26" fill="${c[d.M]||c.normal}" stroke="#fff" stroke-width=".3"/>
-            <polygon points="26,2 20,8 20,20 26,26" fill="${c[d.D]||c.normal}" stroke="#fff" stroke-width=".3"/>
-            <rect x="8" y="8" width="12" height="12" rx="2" fill="${c[d.O]||c.normal}" stroke="#fff" stroke-width=".3"/>
-          </svg>
-        </div>`;
-      };
-      const sup=[18,17,16,15,14,13,12,11,21,22,23,24,25,26,27,28];
-      const inf=[48,47,46,45,44,43,42,41,31,32,33,34,35,36,37,38];
-      html+=`<div style="margin-top:20px;padding-top:20px;border-top:1px solid #f0ebe3">
-        <div style="font-size:11px;font-weight:600;color:#9c8070;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">Odontograma</div>
-        <div style="background:#f5f1ec;border-radius:12px;padding:16px">
-          <div style="font-size:9px;color:#9c8070;text-align:center;font-weight:600;margin-bottom:8px">SUPERIOR</div>
-          <div style="display:flex;justify-content:center;gap:2px;margin-bottom:6px">${sup.map((n,i)=>(i===8?'<div style="width:6px"></div>':'')+makeTooth(n)).join('')}</div>
-          <div style="display:flex;justify-content:center;gap:2px;margin-bottom:6px">${inf.map((n,i)=>(i===8?'<div style="width:6px"></div>':'')+makeTooth(n)).join('')}</div>
-          <div style="font-size:9px;color:#9c8070;text-align:center;font-weight:600;margin-top:6px">INFERIOR</div>
-        </div>
-      </div>`;
-
-      // Anotações por dente
-      const anotacoes=Object.entries(od).filter(([k,v])=>v.nota).map(([k,v])=>`Dente ${k}: ${v.nota}`);
-      if(anotacoes.length){
-        html+=`<div style="margin-top:12px;font-size:12px;color:#4a3728"><strong>Observações por dente:</strong><br>${anotacoes.join('<br>')}</div>`;
-      }
-    }catch(e){}
-  }
-
-  html+=`<div style="margin-top:32px;padding-top:16px;border-top:1px solid #f0ebe3;font-size:11px;color:#9c8070;text-align:center">
-    Este orçamento é válido por 30 dias a partir da data de emissão. ${clinica.nome||''}
-  </div></div>`;
-  return html;
-}
-
 async function gerarPDF(){
   const orc=window._pdfOrc;
   if(!orc){alert('Erro: orcamento nao encontrado');return;}
@@ -840,21 +470,17 @@ async function gerarPDF(){
   doc.rect(0,0,210,35,'F');
 
   // Logo texto
-  doc.setFont('helvetica','bold');
   doc.setFontSize(18);
   doc.setTextColor(255,255,255);
   doc.text('ClinicOS',14,14);
 
-  doc.setFont('helvetica','normal');
   doc.setFontSize(9);
   doc.text('Orcamento Profissional',14,21);
   doc.text('No. '+String(orc.id).padStart(4,'0'),14,27);
 
   // Clinica info (direita)
-  doc.setFont('helvetica','bold');
   doc.setFontSize(11);
   doc.text(clinica.nome||'Clinica',196,13,{align:'right'});
-  doc.setFont('helvetica','normal');
   doc.setFontSize(9);
   if(clinica.especialidade) doc.text(clinica.especialidade,196,20,{align:'right'});
   doc.text(new Date().toLocaleDateString('pt-BR'),196,27,{align:'right'});
@@ -862,11 +488,9 @@ async function gerarPDF(){
   // Paciente box
   doc.setFillColor(...corBge);
   doc.rect(14,40,182,16,'F');
-  doc.setFont('helvetica','bold');
   doc.setFontSize(8);
   doc.setTextColor(...corCin);
   doc.text('PACIENTE',18,47);
-  doc.setFont('helvetica','normal');
   doc.setFontSize(12);
   doc.setTextColor(...corEsc);
   doc.text(orc.paciente_nome||'—',18,54);
@@ -874,12 +498,10 @@ async function gerarPDF(){
   // Descricao
   let curY=62;
   if(orc.descricao){
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(8);
+      doc.setFontSize(8);
     doc.setTextColor(...corCin);
     doc.text('DESCRICAO',14,curY);
-    doc.setFont('helvetica','normal');
-    doc.setFontSize(10);
+      doc.setFontSize(10);
     doc.setTextColor(...corEsc);
     doc.text(orc.descricao,14,curY+6);
     curY+=14;
@@ -920,7 +542,6 @@ async function gerarPDF(){
   doc.setLineWidth(0.3);
   doc.rect(118,fy,78,altTot);
 
-  doc.setFont('helvetica','normal');
   doc.setFontSize(9);
   doc.setTextColor(...corCin);
   doc.text('Subtotal:',122,fy+8);
@@ -932,14 +553,12 @@ async function gerarPDF(){
     doc.text('Desconto ('+pct+'%):',122,fy+16);
     doc.setTextColor(192,57,43);
     doc.text('-R$'+desc.toFixed(2).replace('.',','),193,fy+16,{align:'right'});
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(11);
+      doc.setFontSize(11);
     doc.setTextColor(...corAcc);
     doc.text('TOTAL:',122,fy+25);
     doc.text('R$'+total.toFixed(2).replace('.',','),193,fy+25,{align:'right'});
   } else {
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(11);
+      doc.setFontSize(11);
     doc.setTextColor(...corAcc);
     doc.text('TOTAL:',122,fy+8);
     doc.text('R$'+total.toFixed(2).replace('.',','),193,fy+8,{align:'right'});
@@ -947,7 +566,6 @@ async function gerarPDF(){
 
   // Validade e observacoes
   fy=fy+altTot+8;
-  doc.setFont('helvetica','normal');
   doc.setFontSize(8);
   doc.setTextColor(...corCin);
   if(orc.validade) doc.text('Validade: '+new Date(orc.validade).toLocaleDateString('pt-BR'),14,fy);
@@ -963,7 +581,6 @@ async function gerarPDF(){
 
   // Linha profissional
   doc.line(14,fy,96,fy);
-  doc.setFont('helvetica','normal');
   doc.setFontSize(8);
   doc.setTextColor(...corCin);
   doc.text('Assinatura do Profissional',14,fy+5);
@@ -984,7 +601,6 @@ async function gerarPDF(){
   doc.rect(0,283,210,14,'F');
   doc.setTextColor(255,255,255);
   doc.setFontSize(7);
-  doc.setFont('helvetica','normal');
   doc.text('Documento gerado pelo ClinicOS - Sistema de Gestao Clinica',105,291,{align:'center'});
 
   doc.save('orcamento-'+String(orc.id).padStart(4,'0')+'.pdf');
