@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>ClinicOS — Orçamentos</title>
+<title>ClinicOS — Orcamentos</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#faf8f5;--surface:#fff;--surface2:#f5f1ec;--surface3:#ede8e0;--border:rgba(139,90,60,.1);--border2:rgba(139,90,60,.18);--accent:#c1714f;--accent2:#e8916e;--accent-light:rgba(193,113,79,.1);--text:#1a1208;--text2:#4a3728;--text3:#9c8070;--success:#5a8a5a;--error:#c0392b;--warning:#c47c2b;--shadow:0 2px 16px rgba(139,90,60,.08);--shadow2:0 8px 40px rgba(139,90,60,.14)}
+:root{--bg:#faf8f5;--surface:#fff;--surface2:#f5f1ec;--border:rgba(139,90,60,.1);--border2:rgba(139,90,60,.18);--accent:#c1714f;--accent2:#e8916e;--accent-light:rgba(193,113,79,.1);--text:#1a1208;--text2:#4a3728;--text3:#9c8070;--success:#5a8a5a;--error:#c0392b;--warning:#c47c2b;--shadow:0 2px 16px rgba(139,90,60,.08);--shadow2:0 8px 40px rgba(139,90,60,.14);--radius2:22px;--radius3:10px}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;-webkit-font-smoothing:antialiased}
 .sidebar{width:264px;min-height:100vh;background:var(--text);display:flex;flex-direction:column;padding:28px 14px;position:fixed;top:0;left:0;bottom:0;overflow-y:auto}
 .logo{display:flex;align-items:center;gap:12px;padding:8px 12px;margin-bottom:36px}
 .logo-icon{width:38px;height:38px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.logo-text{font-family:'Playfair Display',serif;font-size:21px;font-weight:600;color:#fff}
-.logo-text span{color:var(--accent2)}
+.logo-text{font-family:'Playfair Display',serif;font-size:21px;font-weight:600;color:#fff}.logo-text span{color:var(--accent2)}
 nav{flex:1;display:flex;flex-direction:column;gap:2px}
 .nav-sec{font-size:10px;font-weight:600;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.2px;padding:18px 12px 6px}
 .nav-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:rgba(255,255,255,.55);text-decoration:none;font-size:14px;transition:all .15s}
@@ -25,96 +25,53 @@ nav{flex:1;display:flex;flex-direction:column;gap:2px}
 .sidebar-footer{border-top:1px solid rgba(255,255,255,.08);padding-top:14px;margin-top:14px}
 .clinica-info{padding:10px 12px;display:flex;align-items:center;gap:10px}
 .avatar{width:34px;height:34px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff;flex-shrink:0}
-.clinica-nome{font-size:13px;font-weight:500;color:#fff}
-.clinica-esp{font-size:11px;color:rgba(255,255,255,.4)}
+.clinica-nome{font-size:13px;font-weight:500;color:#fff}.clinica-esp{font-size:11px;color:rgba(255,255,255,.4)}
 .btn-logout{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;color:rgba(255,255,255,.4);background:none;border:none;font-family:inherit;font-size:14px;cursor:pointer;transition:all .15s;width:100%}
 .btn-logout:hover{background:rgba(192,57,43,.15);color:#e88}
 .main{margin-left:264px;flex:1;padding:36px;min-height:100vh}
 .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:32px}
 .page-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:600;letter-spacing:-.3px}
 .page-subtitle{font-size:14px;color:var(--text3);margin-top:3px}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:11px 20px;background:var(--accent);border:none;border-radius:10px;color:#fff;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;text-decoration:none}
-.btn:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(193,113,79,.3)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:11px 20px;background:var(--accent);border:none;border-radius:var(--radius3);color:#fff;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;text-decoration:none}
+.btn:hover{background:var(--accent2);transform:translateY(-1px)}
 .btn:disabled{opacity:.4;cursor:not-allowed}
 .btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2)}
-.btn-outline:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light);transform:none;box-shadow:none}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light);transform:none}
 .btn-success{background:rgba(90,138,90,.12);border:1px solid rgba(90,138,90,.2);color:var(--success)}
-.btn-danger{background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.2);color:var(--error)}
-.table-wrap{background:var(--surface);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--border)}
+.btn-success:hover{background:rgba(90,138,90,.2);transform:none}
+.table-wrap{background:var(--surface);border-radius:var(--radius2);box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--border)}
 table{width:100%;border-collapse:collapse}
 thead{background:var(--surface2)}
 th{padding:12px 20px;text-align:left;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.6px}
 td{padding:14px 20px;font-size:14px;border-top:1px solid var(--border)}
 tr:hover td{background:var(--surface2)}
 .empty{text-align:center;padding:60px;color:var(--text3);font-size:14px}
-.modal-overlay{position:fixed;inset:0;background:rgba(26,18,8,.55);backdrop-filter:blur(6px);display:flex;align-items:flex-start;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .25s;padding:20px;overflow-y:auto}
+.modal-overlay{position:fixed;inset:0;background:rgba(26,18,8,.5);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .25s}
 .modal-overlay.open{opacity:1;pointer-events:all}
-.modal{background:var(--surface);border-radius:22px;padding:32px;width:100%;max-width:820px;transform:translateY(20px) scale(.97);transition:all .25s;box-shadow:var(--shadow2);border:1px solid var(--border);margin:auto}
+.modal{background:var(--surface);border-radius:var(--radius2);padding:32px;width:100%;max-width:520px;transform:translateY(20px) scale(.97);transition:all .25s;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow2);border:1px solid var(--border)}
 .modal-overlay.open .modal{transform:translateY(0) scale(1)}
 .modal-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;margin-bottom:22px}
 .form{display:flex;flex-direction:column;gap:14px}
 .field{display:flex;flex-direction:column;gap:6px}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.field-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 label{font-size:12px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
-input,select,textarea{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:all .15s;width:100%}
+input,select,textarea{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius3);padding:11px 14px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:all .15s;width:100%}
 input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light);background:var(--surface)}
 input::placeholder,textarea::placeholder{color:var(--text3)}
 select option{background:var(--surface)}
+textarea{resize:vertical;min-height:70px}
 .modal-footer{display:flex;gap:10px;margin-top:22px;justify-content:flex-end}
-.msg{font-size:13px;padding:10px 14px;border-radius:10px;margin-top:4px}
+.msg{font-size:13px;padding:10px 14px;border-radius:var(--radius3);margin-top:4px}
 .msg.error{background:rgba(192,57,43,.07);color:var(--error);border:1px solid rgba(192,57,43,.15)}
 .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500}
 .badge-pago,.badge-realizado,.badge-ativo{background:rgba(90,138,90,.12);color:#2d6b3a}
 .badge-pendente,.badge-a_realizar{background:rgba(196,124,43,.12);color:#8a5a10}
 .badge-parcial{background:rgba(90,120,180,.12);color:#2d4a8a}
 .badge-cancelado,.badge-recusado{background:rgba(192,57,43,.1);color:var(--error)}
-.secao{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:4px}
-.total-box{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);margin-top:4px}
-
-/* ODONTOGRAMA */
-.odonto-wrap{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px;margin-top:4px}
-.odonto-title{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
-.odonto-legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)}
-.leg-dot{width:12px;height:12px;border-radius:3px}
-.odonto-row{display:flex;justify-content:center;gap:3px;margin-bottom:8px}
-.odonto-label{font-size:10px;color:var(--text3);text-align:center;margin-bottom:2px}
-.tooth-wrap{display:flex;flex-direction:column;align-items:center;gap:1px}
-.tooth-num{font-size:9px;color:var(--text3);text-align:center;font-weight:600;margin-bottom:2px}
-.tooth{position:relative;width:28px;height:28px;cursor:pointer}
-.tooth svg{width:28px;height:28px}
-.tooth path,.tooth polygon{transition:fill .15s;cursor:pointer}
-.tooth path:hover,.tooth polygon:hover{opacity:.8}
-
-/* Cores das faces */
-.face-normal{fill:#e8e0d8;stroke:#9c8070;stroke-width:0.8}
-.face-carie{fill:#e74c3c}
-.face-restaurado{fill:#3498db}
-.face-extracor{fill:#e67e22}
-.face-ausente{fill:#95a5a6}
-.face-coroa{fill:#9b59b6}
-.face-implante{fill:#1abc9c}
-
-.odonto-divider{width:2px;background:var(--border2);margin:0 6px;border-radius:2px}
-.proc-selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.proc-btn{padding:5px 12px;border-radius:20px;border:1px solid var(--border2);background:var(--surface);font-size:12px;cursor:pointer;transition:all .15s;font-family:inherit;color:var(--text2)}
-.proc-btn.selected{color:#fff;border-color:transparent}
-.tooth-detail{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:10px;display:none}
-.tooth-detail.show{display:block}
+.total-box{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--surface2);border-radius:var(--radius3);border:1px solid var(--border);margin-top:4px}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-<script>
-window.addEventListener('error', function(e) {
-  if (e.message && e.message.includes('html2canvas')) {
-    e.preventDefault();
-  }
-});
-</script>
 </head>
 <body>
-
 <aside class="sidebar">
   <div class="logo">
     <div class="logo-icon"><svg viewBox="0 0 22 22" width="22" height="22"><path d="M15 4A9 9 0 1 0 15 18" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="4" x2="20" y2="4" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="18" x2="20" y2="18" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg></div>
@@ -122,174 +79,91 @@ window.addEventListener('error', function(e) {
   </div>
   <nav>
     <div class="nav-sec">Menu</div>
-    <a class="nav-link" href="/dashboard.html"><span class="nav-icon">◈</span>Início</a>
+    <a class="nav-link" href="/dashboard.html"><span class="nav-icon">◈</span>Inicio</a>
     <a class="nav-link" href="/pacientes.html"><span class="nav-icon">◉</span>Pacientes</a>
     <a class="nav-link" href="/consultas.html"><span class="nav-icon">◷</span>Consultas</a>
     <a class="nav-link" href="/procedimentos.html"><span class="nav-icon">✦</span>Procedimentos</a>
-    <a class="nav-link active" href="/orcamentos.html"><span class="nav-icon">◎</span>Orçamentos</a>
+    <a class="nav-link active" href="/orcamentos.html"><span class="nav-icon">◎</span>Orcamentos</a>
     <a class="nav-link" href="/financeiro.html"><span class="nav-icon">◐</span>Financeiro</a>
     <a class="nav-link" href="/estoque.html"><span class="nav-icon">▣</span>Estoque</a>
     <a class="nav-link" href="/retornos.html"><span class="nav-icon">↺</span>Retornos</a>
-    <a class="nav-link" href="/usuarios.html"><span class="nav-icon">👤</span>Usuários</a>
+    <a class="nav-link" href="/usuarios.html"><span class="nav-icon">👤</span>Usuarios</a>
   </nav>
   <div class="sidebar-footer">
     <div class="clinica-info">
       <div class="avatar" id="avatar">C</div>
-      <div>
-        <div class="clinica-nome" id="clinica-nome">Clínica</div>
-        <div class="clinica-esp" id="clinica-esp"></div>
-      </div>
+      <div><div class="clinica-nome" id="clinica-nome">Clinica</div><div class="clinica-esp" id="clinica-esp"></div></div>
     </div>
-    <button class="btn-logout" onclick="logout()" style="background:none;color:rgba(255,255,255,.4)">⎋ Sair</button>
+    <button class="btn-logout" onclick="logout()" style="background:none;color:rgba(255,255,255,.4)">Sair</button>
   </div>
 </aside>
 
 <main class="main">
   <div class="page-header">
-    <div><div class="page-title">Orçamentos</div><div class="page-subtitle">Gerencie orçamentos dos pacientes</div></div>
-    <button class="btn" onclick="abrirNovo()">+ Novo orçamento</button>
+    <div><div class="page-title">Orcamentos</div><div class="page-subtitle">Gerencie orcamentos dos pacientes</div></div>
+    <button class="btn" onclick="abrirNovo()">+ Novo orcamento</button>
   </div>
   <div class="table-wrap">
     <table>
-      <thead><tr><th>Paciente</th><th>Descrição</th><th>Subtotal</th><th>Desconto</th><th>Total final</th><th>Realização</th><th>Pagamento</th><th></th></tr></thead>
+      <thead><tr><th>Paciente</th><th>Descricao</th><th>Subtotal</th><th>Desconto</th><th>Total</th><th>Realizacao</th><th>Pagamento</th><th>Acoes</th></tr></thead>
       <tbody id="tbody"><tr><td colspan="8" class="empty">Carregando...</td></tr></tbody>
     </table>
   </div>
 </main>
 
-<!-- MODAL NOVO ORÇAMENTO -->
+<!-- MODAL NOVO -->
 <div class="modal-overlay" id="modal-novo">
-  <div class="modal">
-    <div class="modal-title">Novo Orçamento</div>
+  <div class="modal" style="max-width:580px">
+    <div class="modal-title">Novo Orcamento</div>
     <div class="form">
+      <div class="field"><label>Paciente</label><select id="o-pac"><option value="">Selecione...</option></select></div>
+      <div class="field"><label>Descricao</label><input id="o-desc" placeholder="Descricao geral"/></div>
       <div class="field-row">
-        <div class="field"><label>Paciente</label><select id="o-pac"><option value="">Selecione...</option></select></div>
         <div class="field"><label>Validade</label><input id="o-val" type="date"/></div>
+        <div class="field"><label>Desconto (%)</label><input id="o-pct" type="number" min="0" max="100" step="0.5" placeholder="0" oninput="calcTotal()"/></div>
       </div>
-      <div class="field"><label>Descrição</label><input id="o-desc" placeholder="Descrição geral do orçamento"/></div>
-      <div class="field-row">
-        <div class="field"><label>Desconto (%)</label><input id="o-desc-pct" type="number" min="0" max="100" step="0.5" placeholder="0" oninput="calcTotal()"/></div>
-        <div class="field"><label>Observações</label><input id="o-obs" placeholder="Observações..."/></div>
-      </div>
-
-      <!-- ODONTOGRAMA -->
-      <div id="odonto-section" style="display:none">
-        <div class="secao" style="margin-top:8px">Odontograma</div>
-        <div class="odonto-wrap">
-          <div class="odonto-title">
-            <span>Mapa dental — clique nas faces para marcar</span>
-            <button type="button" class="btn btn-outline" style="padding:5px 12px;font-size:12px" onclick="limparOdonto()">Limpar</button>
-          </div>
-
-          <!-- Legenda -->
-          <div class="odonto-legend">
-            <div class="leg-item"><div class="leg-dot" style="background:#e8e0d8;border:1px solid #9c8070"></div>Normal</div>
-            <div class="leg-item"><div class="leg-dot" style="background:#e74c3c"></div>Cárie</div>
-            <div class="leg-item"><div class="leg-dot" style="background:#3498db"></div>Restaurado</div>
-            <div class="leg-item"><div class="leg-dot" style="background:#e67e22"></div>Extração</div>
-            <div class="leg-item"><div class="leg-dot" style="background:#9b59b6"></div>Coroa</div>
-            <div class="leg-item"><div class="leg-dot" style="background:#1abc9c"></div>Implante</div>
-            <div class="leg-item"><div class="leg-dot" style="background:#95a5a6"></div>Ausente</div>
-          </div>
-
-          <!-- Seletor de procedimento -->
-          <div style="font-size:11px;font-weight:600;color:var(--text3);margin-bottom:6px">Procedimento ativo:</div>
-          <div class="proc-selector" id="proc-selector">
-            <button type="button" class="proc-btn selected" data-proc="normal" style="background:#e8e0d8;border-color:#9c8070" onclick="selectProc(this,'normal')">Normal</button>
-            <button type="button" class="proc-btn" data-proc="carie" onclick="selectProc(this,'carie')" style="background:rgba(231,76,60,.1);border-color:#e74c3c;color:#e74c3c">Cárie</button>
-            <button type="button" class="proc-btn" data-proc="restaurado" onclick="selectProc(this,'restaurado')" style="background:rgba(52,152,219,.1);border-color:#3498db;color:#3498db">Restaurado</button>
-            <button type="button" class="proc-btn" data-proc="extracao" onclick="selectProc(this,'extracao')" style="background:rgba(230,126,34,.1);border-color:#e67e22;color:#e67e22">Extração</button>
-            <button type="button" class="proc-btn" data-proc="coroa" onclick="selectProc(this,'coroa')" style="background:rgba(155,89,182,.1);border-color:#9b59b6;color:#9b59b6">Coroa</button>
-            <button type="button" class="proc-btn" data-proc="implante" onclick="selectProc(this,'implante')" style="background:rgba(26,188,156,.1);border-color:#1abc9c;color:#1abc9c">Implante</button>
-            <button type="button" class="proc-btn" data-proc="ausente" onclick="selectProc(this,'ausente')" style="background:rgba(149,165,166,.1);border-color:#95a5a6;color:#666">Ausente</button>
-          </div>
-
-          <!-- Dentes superiores -->
-          <div style="font-size:10px;color:var(--text3);text-align:center;margin-bottom:6px;font-weight:600">SUPERIOR</div>
-          <div class="odonto-row" id="row-sup"></div>
-          <div style="height:12px"></div>
-          <!-- Dentes inferiores -->
-          <div class="odonto-row" id="row-inf"></div>
-          <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:6px;font-weight:600">INFERIOR</div>
-
-          <!-- Detalhe do dente selecionado -->
-          <div class="tooth-detail" id="tooth-detail">
-            <div style="font-size:13px;font-weight:600;margin-bottom:10px" id="detail-title">Dente 11</div>
-            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;font-size:11px;text-align:center">
-              <div>
-                <div style="color:var(--text3);margin-bottom:4px">Vestibular</div>
-                <div id="face-V" class="face-indicator" style="height:28px;border-radius:6px;cursor:pointer;border:1px solid var(--border2)" onclick="toggleFace('V')"></div>
-              </div>
-              <div>
-                <div style="color:var(--text3);margin-bottom:4px">Lingual</div>
-                <div id="face-L" class="face-indicator" style="height:28px;border-radius:6px;cursor:pointer;border:1px solid var(--border2)" onclick="toggleFace('L')"></div>
-              </div>
-              <div>
-                <div style="color:var(--text3);margin-bottom:4px">Mesial</div>
-                <div id="face-M" class="face-indicator" style="height:28px;border-radius:6px;cursor:pointer;border:1px solid var(--border2)" onclick="toggleFace('M')"></div>
-              </div>
-              <div>
-                <div style="color:var(--text3);margin-bottom:4px">Distal</div>
-                <div id="face-D" class="face-indicator" style="height:28px;border-radius:6px;cursor:pointer;border:1px solid var(--border2)" onclick="toggleFace('D')"></div>
-              </div>
-              <div>
-                <div style="color:var(--text3);margin-bottom:4px">Oclusal</div>
-                <div id="face-O" class="face-indicator" style="height:28px;border-radius:6px;cursor:pointer;border:1px solid var(--border2)" onclick="toggleFace('O')"></div>
-              </div>
-            </div>
-            <div style="margin-top:10px">
-              <label style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Anotação</label>
-              <input id="tooth-nota" placeholder="Observação sobre este dente..." style="margin-top:4px" oninput="saveNota()"/>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ITENS -->
-      <div class="secao" style="margin-top:8px">Itens do orçamento</div>
-      <div id="itens-container"></div>
+      <div class="field"><label>Observacoes</label><textarea id="o-obs" placeholder="Observacoes..."></textarea></div>
+      <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:4px">Itens</div>
+      <div id="itens-wrap"></div>
       <button type="button" class="btn btn-outline" style="width:100%;justify-content:center" onclick="addItem()">+ Adicionar item</button>
-
       <div class="total-box">
-        <div><div style="font-size:11px;color:var(--text3)">Subtotal</div><div style="font-size:14px;color:var(--text2)" id="subtotal-txt">R$ 0,00</div></div>
-        <div style="text-align:center"><div style="font-size:11px;color:var(--text3)">Desconto</div><div style="font-size:14px;color:var(--error)" id="desconto-txt">- R$ 0,00</div></div>
-        <div style="text-align:right"><div style="font-size:11px;font-weight:600;color:var(--text3)">TOTAL FINAL</div><div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:600;color:var(--accent)" id="total-txt">R$ 0,00</div></div>
+        <div><div style="font-size:11px;color:var(--text3)">Subtotal</div><div id="s-sub" style="font-size:13px;color:var(--text3)">R$ 0,00</div></div>
+        <div style="text-align:right"><div style="font-size:11px;color:var(--text3)">Desconto</div><div id="s-desc" style="font-size:13px;color:var(--error)">- R$ 0,00</div></div>
+        <div style="text-align:right"><div style="font-size:11px;font-weight:600;color:var(--text3)">TOTAL</div><div id="s-total" style="font-family:'Playfair Display',serif;font-size:24px;font-weight:600;color:var(--accent)">R$ 0,00</div></div>
       </div>
       <div id="msg-novo"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="fecharNovo()">Cancelar</button>
-      <button class="btn" id="btn-salvar" onclick="salvar()">Salvar orçamento</button>
+      <button class="btn" id="btn-salvar" onclick="salvar()">Salvar orcamento</button>
     </div>
   </div>
 </div>
 
 <!-- MODAL BAIXA -->
 <div class="modal-overlay" id="modal-baixa">
-  <div class="modal" style="max-width:440px">
-    <div class="modal-title">Dar Baixa no Orçamento</div>
-    <div id="baixa-info" style="background:var(--surface2);border-radius:10px;padding:14px;margin-bottom:20px;font-size:14px"></div>
+  <div class="modal" style="max-width:420px">
+    <div class="modal-title">Dar Baixa</div>
     <div class="form">
-      <div class="field"><label>Status de realização</label>
-        <select id="b-realizacao"><option value="realizado">Realizado</option><option value="a_realizar">A realizar</option><option value="cancelado">Cancelado</option></select>
+      <div class="field"><label>Status de realizacao</label>
+        <select id="b-real"><option value="realizado">Realizado</option><option value="a_realizar">A realizar</option><option value="cancelado">Cancelado</option></select>
       </div>
       <div class="field"><label>Status de pagamento</label>
-        <select id="b-pagamento"><option value="pago">Pago</option><option value="parcial">Parcial</option><option value="pendente">Pendente</option></select>
+        <select id="b-pag"><option value="pago">Pago</option><option value="parcial">Parcial</option><option value="pendente">Pendente</option></select>
       </div>
       <div class="field"><label>Forma de pagamento</label>
-        <select id="b-forma" onchange="toggleParcelas()">
+        <select id="b-forma" onchange="toggleParc()">
           <option value="">Selecione...</option>
           <option value="dinheiro">Dinheiro</option>
           <option value="pix">PIX</option>
-          <option value="debito">Débito</option>
-          <option value="credito">Crédito</option>
-          <option value="convenio">Convênio</option>
+          <option value="debito">Debito</option>
+          <option value="credito">Credito</option>
+          <option value="convenio">Convenio</option>
         </select>
       </div>
-      <div class="field" id="parcelas-field" style="display:none">
-        <label>Parcelas</label>
-        <select id="b-parcelas">
-          <option value="1">1x (à vista)</option><option value="2">2x</option><option value="3">3x</option>
+      <div class="field" id="parc-field" style="display:none"><label>Parcelas</label>
+        <select id="b-parc">
+          <option value="1">1x (a vista)</option><option value="2">2x</option><option value="3">3x</option>
           <option value="4">4x</option><option value="5">5x</option><option value="6">6x</option>
           <option value="10">10x</option><option value="12">12x</option>
         </select>
@@ -298,306 +172,218 @@ window.addEventListener('error', function(e) {
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="fecharBaixa()">Cancelar</button>
-      <button class="btn" id="btn-baixa" onclick="confirmarBaixa()">Confirmar baixa</button>
+      <button class="btn" id="btn-baixa" onclick="confirmarBaixa()">Confirmar</button>
     </div>
-  </div>
-</div>
-
-<!-- MODAL PDF/VISUALIZAR -->
-<div class="modal-overlay" id="modal-pdf">
-  <div class="modal" style="max-width:700px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-      <div class="modal-title" style="margin:0">Visualizar Orçamento</div>
-      <div style="display:flex;gap:8px">
-        <button class="btn" onclick="gerarPDF()">⬇ Baixar PDF</button>
-        <button class="btn btn-outline" onclick="fecharPDF()">✕</button>
-      </div>
-    </div>
-    <div id="pdf-content" style="background:#fff;border-radius:12px;padding:32px;border:1px solid var(--border)"></div>
   </div>
 </div>
 
 <script>
-const API='https://clinicos-backend-production-68fe.up.railway.app';
+const API= + API + ;
 const token=localStorage.getItem('token');
 if(!token)window.location.href='/login.html';
 const clinica=JSON.parse(localStorage.getItem('clinica')||'{}');
-if(document.getElementById('clinica-nome'))document.getElementById('clinica-nome').textContent=clinica.nome||'Clínica';
+if(document.getElementById('clinica-nome'))document.getElementById('clinica-nome').textContent=clinica.nome||'Clinica';
 if(document.getElementById('clinica-esp'))document.getElementById('clinica-esp').textContent=clinica.especialidade||'';
 if(document.getElementById('avatar'))document.getElementById('avatar').textContent=(clinica.nome||'C')[0].toUpperCase();
 function logout(){localStorage.clear();window.location.href='/login.html';}
-async function apiFetch(path,opts={}){
+async function api(path,opts={}){
   const res=await fetch(API+path,{headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},...opts});
   if(res.status===401){logout();return null;}
   return res.json();
 }
-function fmtMoeda(v){return 'R$ '+parseFloat(v||0).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+function fmt(v){return 'R$ '+parseFloat(v||0).toFixed(2).replace('.',',');}
 function fmtData(d){if(!d)return '—';return new Date(d).toLocaleDateString('pt-BR');}
 
-// ── ODONTOGRAMA ──
-const DENTES_SUP = [18,17,16,15,14,13,12,11,21,22,23,24,25,26,27,28];
-const DENTES_INF = [48,47,46,45,44,43,42,41,31,32,33,34,35,36,37,38];
-const FACES = ['V','L','M','D','O'];
-const PROC_CORES = {normal:'#e8e0d8',carie:'#e74c3c',restaurado:'#3498db',extracao:'#e67e22',coroa:'#9b59b6',implante:'#1abc9c',ausente:'#95a5a6'};
-let odonto = {}; // {11: {V:'carie', L:'normal', ...}, nota:'...'}
-let procAtivo = 'normal';
-let denteAtivo = null;
-const isOdonto = (clinica.especialidade||'').toLowerCase().includes('odonto') || (clinica.especialidade||'').toLowerCase().includes('dent');
+let itensList=[], baixaId=null;
 
-function initOdonto(){
-  [...DENTES_SUP,...DENTES_INF].forEach(n=>{
-    if(!odonto[n]) odonto[n]={V:'normal',L:'normal',M:'normal',D:'normal',O:'normal',nota:''};
-  });
+async function carregar(){
+  const [orcs,pacs]=await Promise.all([api('/api/orcamentos'),api('/api/pacientes')]);
+  if(pacs){
+    const s=document.getElementById('o-pac');
+    s.innerHTML='<option value="">Selecione...</option>'+pacs.map(p=>`<option value="${p.id}">${p.nome}</option>`).join('');
+  }
+  if(orcs){
+    const tb=document.getElementById('tbody');
+    if(!orcs.length){tb.innerHTML='<tr><td colspan="8" class="empty">Nenhum orcamento</td></tr>';return;}
+    tb.innerHTML=orcs.map(o=>`<tr>
+      <td style="font-weight:500">${o.paciente_nome||'—'}</td>
+      <td style="color:var(--text3);font-size:13px">${o.descricao||'—'}</td>
+      <td style="color:var(--text3)">${fmt(o.valor_total)}</td>
+      <td style="color:var(--error);font-size:12px">${o.desconto_percentual>0?o.desconto_percentual+'%':'—'}</td>
+      <td style="font-weight:600;color:var(--accent)">${fmt(o.valor_final||o.valor_total)}</td>
+      <td><span class="badge badge-${o.status_realizacao||'a_realizar'}">${(o.status_realizacao||'a realizar').replace('_',' ')}</span></td>
+      <td><span class="badge badge-${o.status_pagamento||'pendente'}">${o.status_pagamento||'pendente'}</span></td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-success" style="padding:5px 10px;font-size:12px" onclick="abrirBaixa(${o.id})">Baixa</button>
+        <button class="btn btn-outline" style="padding:5px 10px;font-size:12px" onclick="gerarPDF(${o.id})">PDF</button>
+      </td>
+    </tr>`).join('');
+  }
 }
 
-function selectProc(btn,proc){
-  document.querySelectorAll('.proc-btn').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected');
-  procAtivo=proc;
+function abrirNovo(){itensList=[];renderItens();document.getElementById('modal-novo').classList.add('open');}
+function fecharNovo(){document.getElementById('modal-novo').classList.remove('open');}
+function addItem(){itensList.push({descricao:'',quantidade:1,valor_unitario:0});renderItens();}
+function renderItens(){
+  document.getElementById('itens-wrap').innerHTML=itensList.map((it,i)=>`
+    <div style="display:grid;grid-template-columns:2fr 70px 100px 32px;gap:8px;margin-bottom:8px;align-items:center">
+      <input placeholder="Descricao do item" value="${it.descricao}" oninput="itensList[${i}].descricao=this.value" style="font-size:13px;padding:9px 12px"/>
+      <input type="number" placeholder="Qtd" value="${it.quantidade}" min="1" oninput="itensList[${i}].quantidade=parseInt(this.value)||1;calcTotal()" style="font-size:13px;padding:9px 12px"/>
+      <input type="number" placeholder="R$" value="${it.valor_unitario}" oninput="itensList[${i}].valor_unitario=parseFloat(this.value)||0;calcTotal()" style="font-size:13px;padding:9px 12px"/>
+      <button onclick="itensList.splice(${i},1);renderItens()" style="background:none;border:none;color:var(--error);cursor:pointer;font-size:20px">x</button>
+    </div>`).join('');
+  calcTotal();
+}
+function calcTotal(){
+  const sub=itensList.reduce((s,i)=>s+(i.valor_unitario*i.quantidade),0);
+  const pct=parseFloat(document.getElementById('o-pct').value)||0;
+  const desc=sub*pct/100;
+  document.getElementById('s-sub').textContent=fmt(sub);
+  document.getElementById('s-desc').textContent='- '+fmt(desc);
+  document.getElementById('s-total').textContent=fmt(sub-desc);
+}
+async function salvar(){
+  const btn=document.getElementById('btn-salvar');
+  const pac=document.getElementById('o-pac').value;
+  if(!pac){document.getElementById('msg-novo').innerHTML='<div class="msg error">Selecione um paciente</div>';return;}
+  btn.disabled=true;btn.textContent='Salvando...';
+  const res=await api('/api/orcamentos',{method:'POST',body:JSON.stringify({
+    paciente_id:parseInt(pac),
+    descricao:document.getElementById('o-desc').value,
+    validade:document.getElementById('o-val').value||null,
+    desconto_percentual:parseFloat(document.getElementById('o-pct').value)||0,
+    observacoes:document.getElementById('o-obs').value,
+    itens:itensList
+  })});
+  btn.disabled=false;btn.textContent='Salvar orcamento';
+  if(res){fecharNovo();carregar();}
 }
 
-function toothSVG(num){
-  const d = odonto[num]||{V:'normal',L:'normal',M:'normal',D:'normal',O:'normal'};
-  const c = PROC_CORES;
-  const isActive = denteAtivo===num;
-  const border = isActive?'stroke:#c1714f;stroke-width:1.5':'stroke:#9c8070;stroke-width:0.5';
-  return `<svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg" style="display:block">
-    <rect x="0.5" y="0.5" width="27" height="27" rx="4" fill="#f5f1ec" ${border}/>
-    <!-- Vestibular (top) -->
-    <polygon points="2,2 26,2 20,8 8,8" fill="${c[d.V]}" stroke="#fff" stroke-width="0.3" onclick="faceClick(event,${num},'V')" style="cursor:pointer"/>
-    <!-- Lingual (bottom) -->
-    <polygon points="8,20 20,20 26,26 2,26" fill="${c[d.L]}" stroke="#fff" stroke-width="0.3" onclick="faceClick(event,${num},'L')" style="cursor:pointer"/>
-    <!-- Mesial (left) -->
-    <polygon points="2,2 8,8 8,20 2,26" fill="${c[d.M]}" stroke="#fff" stroke-width="0.3" onclick="faceClick(event,${num},'M')" style="cursor:pointer"/>
-    <!-- Distal (right) -->
-    <polygon points="26,2 20,8 20,20 26,26" fill="${c[d.D]}" stroke="#fff" stroke-width="0.3" onclick="faceClick(event,${num},'D')" style="cursor:pointer"/>
-    <!-- Oclusal (center) -->
-    <rect x="8" y="8" width="12" height="12" rx="2" fill="${c[d.O]}" stroke="#fff" stroke-width="0.3" onclick="faceClick(event,${num},'O')" style="cursor:pointer"/>
-  </svg>`;
+function abrirBaixa(id){baixaId=id;document.getElementById('msg-baixa').innerHTML='';document.getElementById('modal-baixa').classList.add('open');}
+function fecharBaixa(){document.getElementById('modal-baixa').classList.remove('open');}
+function toggleParc(){document.getElementById('parc-field').style.display=document.getElementById('b-forma').value==='credito'?'block':'none';}
+async function confirmarBaixa(){
+  const btn=document.getElementById('btn-baixa');
+  btn.disabled=true;btn.textContent='Salvando...';
+  const res=await api('/api/orcamentos/'+baixaId+'/baixa',{method:'PUT',body:JSON.stringify({
+    status_realizacao:document.getElementById('b-real').value,
+    status_pagamento:document.getElementById('b-pag').value,
+    forma_pagamento:document.getElementById('b-forma').value,
+    parcelas:parseInt(document.getElementById('b-parc').value)||1,
+  })});
+  btn.disabled=false;btn.textContent='Confirmar';
+  if(res){fecharBaixa();carregar();}
 }
 
-function faceClick(e,num,face){
-  e.stopPropagation();
-  if(!odonto[num]) odonto[num]={V:'normal',L:'normal',M:'normal',D:'normal',O:'normal',nota:''};
-  odonto[num][face]=procAtivo;
-  denteAtivo=num;
-  renderOdonto();
-  showDetail(num);
-}
-
-function toothClick(num){
-  denteAtivo=denteAtivo===num?null:num;
-  renderOdonto();
-  if(denteAtivo) showDetail(num);
-  else document.getElementById('tooth-detail').classList.remove('show');
-}
-
-function showDetail(num){
-  const d=odonto[num]||{};
-  document.getElementById('detail-title').textContent=`Dente ${num}`;
-  FACES.forEach(f=>{
-    const el=document.getElementById('face-'+f);
-    if(el){el.style.background=PROC_CORES[d[f]||'normal'];}
-  });
-  document.getElementById('tooth-nota').value=d.nota||'';
-  document.getElementById('tooth-detail').classList.add('show');
-}
-
-function toggleFace(face){
-  if(!denteAtivo)return;
-  if(!odonto[denteAtivo]) odonto[denteAtivo]={V:'normal',L:'normal',M:'normal',D:'normal',O:'normal',nota:''};
-  odonto[denteAtivo][face]=procAtivo;
-  renderOdonto();
-  showDetail(denteAtivo);
-}
-
-function saveNota(){
-  if(!denteAtivo)return;
-  odonto[denteAtivo].nota=document.getElementById('tooth-nota').value;
-}
-
-function renderOdonto(){
-  ['sup','inf'].forEach(side=>{
-    const dentes=side==='sup'?DENTES_SUP:DENTES_INF;
-    const row=document.getElementById('row-'+side);
-    if(!row)return;
-    const mid=dentes.length/2;
-    let html='';
-    dentes.forEach((n,i)=>{
-      if(i===mid) html+='<div class="odonto-divider"></div>';
-      const isActive=denteAtivo===n;
-      html+=`<div class="tooth-wrap" onclick="toothClick(${n})" style="cursor:pointer">
-        <div class="tooth-num" style="color:${isActive?'var(--accent)':'var(--text3)'};font-weight:${isActive?700:600}">${n}</div>
-        <div class="tooth" style="${isActive?'filter:drop-shadow(0 0 3px rgba(193,113,79,.5))':''}">${toothSVG(n)}</div>
-      </div>`;
-    });
-    row.innerHTML=html;
-  });
-}
-
-function limparOdonto(){
-  if(!confirm('Limpar todo o odontograma?'))return;
-  initOdonto();
-  denteAtivo=null;
-  renderOdonto();
-  document.getElementById('tooth-detail').classList.remove('show');
-}
-
-// Mostrar odontograma só para odontologia
-document.getElementById('o-pac').addEventListener('change',function(){
-  const sect=document.getElementById('odonto-section');
-  sect.style.display=isOdonto?'block':'none';
-  if(isOdonto){initOdonto();renderOdonto();}
-});
-
-// ── ORÇAMENTOS ──
-let itensList=[], baixaId=null, orcList=[];
-
-async function gerarPDF(){
-  const orc=window._pdfOrc;
-  if(!orc){alert('Erro: orcamento nao encontrado');return;}
-  const itens=window._pdfItens||[];
+async function gerarPDF(id){
+  const orcs=await api('/api/orcamentos');
+  const orc=orcs?orcs.find(o=>o.id===id):null;
+  if(!orc){alert('Orcamento nao encontrado');return;}
+  const itens=await api('/api/orcamentos/'+id+'/itens');
   const {jsPDF}=window.jspdf;
-  const doc=new jsPDF('p','mm','a4');
+  const doc=new jsPDF();
 
-  const corAcc=[193,113,79];
-  const corEsc=[26,18,8];
-  const corCin=[120,90,70];
-  const corBge=[245,241,236];
-
-  // Header fundo
-  doc.setFillColor(...corAcc);
+  // Header
+  doc.setFillColor(193,113,79);
   doc.rect(0,0,210,35,'F');
-
-  // Logo texto
-  doc.setFontSize(18);
   doc.setTextColor(255,255,255);
+  doc.setFontSize(20);
   doc.text('ClinicOS',14,14);
-
   doc.setFontSize(9);
   doc.text('Orcamento Profissional',14,21);
-  doc.text('No. '+String(orc.id).padStart(4,'0'),14,27);
-
-  // Clinica info (direita)
+  doc.text('No. '+String(orc.id).padStart(4,'0'),14,28);
   doc.setFontSize(11);
   doc.text(clinica.nome||'Clinica',196,13,{align:'right'});
   doc.setFontSize(9);
-  if(clinica.especialidade) doc.text(clinica.especialidade,196,20,{align:'right'});
+  doc.text(clinica.especialidade||'',196,20,{align:'right'});
   doc.text(new Date().toLocaleDateString('pt-BR'),196,27,{align:'right'});
 
-  // Paciente box
-  doc.setFillColor(...corBge);
+  // Paciente
+  doc.setTextColor(26,18,8);
+  doc.setFillColor(245,241,236);
   doc.rect(14,40,182,16,'F');
   doc.setFontSize(8);
-  doc.setTextColor(...corCin);
+  doc.setTextColor(156,128,112);
   doc.text('PACIENTE',18,47);
   doc.setFontSize(12);
-  doc.setTextColor(...corEsc);
+  doc.setTextColor(26,18,8);
   doc.text(orc.paciente_nome||'—',18,54);
 
-  // Descricao
-  let curY=62;
-  if(orc.descricao){
-      doc.setFontSize(8);
-    doc.setTextColor(...corCin);
-    doc.text('DESCRICAO',14,curY);
-      doc.setFontSize(10);
-    doc.setTextColor(...corEsc);
-    doc.text(orc.descricao,14,curY+6);
-    curY+=14;
-  }
-
-  // Tabela de itens
-  const tableData=itens.map(i=>[
+  // Itens tabela
+  const rows=(itens&&itens.length)?itens.map(i=>[
     i.descricao||'—',
     String(i.quantidade||1),
     'R$'+parseFloat(i.valor_unitario||0).toFixed(2).replace('.',','),
     'R$'+parseFloat(i.valor_total||0).toFixed(2).replace('.',',')
-  ]);
+  ]):[['Nenhum item','1','R$0,00','R$0,00']];
 
   doc.autoTable({
-    startY:curY+2,
+    startY:62,
     head:[['Procedimento/Item','Qtd','Unit.','Total']],
-    body:tableData.length?tableData:[['Nenhum item cadastrado','1','R$0,00','R$0,00']],
+    body:rows,
     theme:'striped',
-    headStyles:{fillColor:corAcc,textColor:[255,255,255],fontStyle:'bold',fontSize:9,cellPadding:4},
-    bodyStyles:{fontSize:9,textColor:corEsc,cellPadding:3},
+    headStyles:{fillColor:[193,113,79],textColor:[255,255,255],fontSize:9,cellPadding:4},
+    bodyStyles:{fontSize:9,textColor:[26,18,8],cellPadding:3},
     alternateRowStyles:{fillColor:[250,247,244]},
-    columnStyles:{0:{cellWidth:88},1:{cellWidth:18,halign:'center'},2:{cellWidth:36,halign:'right'},3:{cellWidth:36,halign:'right'}},
+    columnStyles:{0:{cellWidth:90},1:{cellWidth:18,halign:'center'},2:{cellWidth:36,halign:'right'},3:{cellWidth:36,halign:'right'}},
     margin:{left:14,right:14},
   });
 
-  let fy=doc.lastAutoTable.finalY+6;
-
-  // Totais
+  let fy=doc.lastAutoTable.finalY+8;
   const sub=parseFloat(orc.valor_total||0);
   const desc=parseFloat(orc.valor_desconto||0);
   const total=parseFloat(orc.valor_final||orc.valor_total||0);
   const pct=parseFloat(orc.desconto_percentual||0);
-  const altTot=pct>0?26:14;
+  const h=pct>0?26:14;
 
-  doc.setFillColor(...corBge);
-  doc.rect(118,fy,78,altTot,'F');
-  doc.setDrawColor(...corAcc);
-  doc.setLineWidth(0.3);
-  doc.rect(118,fy,78,altTot);
-
+  doc.setFillColor(245,241,236);
+  doc.rect(118,fy,78,h,'F');
   doc.setFontSize(9);
-  doc.setTextColor(...corCin);
+  doc.setTextColor(156,128,112);
   doc.text('Subtotal:',122,fy+8);
-  doc.setTextColor(...corEsc);
+  doc.setTextColor(26,18,8);
   doc.text('R$'+sub.toFixed(2).replace('.',','),193,fy+8,{align:'right'});
-
   if(pct>0){
-    doc.setTextColor(...corCin);
+    doc.setTextColor(156,128,112);
     doc.text('Desconto ('+pct+'%):',122,fy+16);
     doc.setTextColor(192,57,43);
     doc.text('-R$'+desc.toFixed(2).replace('.',','),193,fy+16,{align:'right'});
-      doc.setFontSize(11);
-    doc.setTextColor(...corAcc);
+    doc.setFontSize(12);
+    doc.setTextColor(193,113,79);
     doc.text('TOTAL:',122,fy+25);
     doc.text('R$'+total.toFixed(2).replace('.',','),193,fy+25,{align:'right'});
   } else {
-      doc.setFontSize(11);
-    doc.setTextColor(...corAcc);
+    doc.setFontSize(12);
+    doc.setTextColor(193,113,79);
     doc.text('TOTAL:',122,fy+8);
     doc.text('R$'+total.toFixed(2).replace('.',','),193,fy+8,{align:'right'});
   }
 
-  // Validade e observacoes
-  fy=fy+altTot+8;
+  // Observacoes e validade
+  fy=fy+h+10;
   doc.setFontSize(8);
-  doc.setTextColor(...corCin);
-  if(orc.validade) doc.text('Validade: '+new Date(orc.validade).toLocaleDateString('pt-BR'),14,fy);
-  if(orc.observacoes){
-    fy+=6;
-    doc.text('Obs: '+orc.observacoes,14,fy);
-  }
+  doc.setTextColor(156,128,112);
+  if(orc.validade)doc.text('Validade: '+new Date(orc.validade).toLocaleDateString('pt-BR'),14,fy);
+  if(orc.observacoes){fy+=6;doc.text('Obs: '+orc.observacoes,14,fy);}
 
   // Assinaturas
-  fy=Math.max(fy+16,220);
-  doc.setDrawColor(...corCin);
+  fy=Math.max(fy+20,225);
+  doc.setDrawColor(156,128,112);
   doc.setLineWidth(0.4);
-
-  // Linha profissional
   doc.line(14,fy,96,fy);
+  doc.line(114,fy,196,fy);
   doc.setFontSize(8);
-  doc.setTextColor(...corCin);
+  doc.setTextColor(156,128,112);
   doc.text('Assinatura do Profissional',14,fy+5);
   doc.text(clinica.nome||'Profissional',14,fy+10);
-
-  // Linha paciente
-  doc.line(114,fy,196,fy);
   doc.text('Assinatura do Paciente',114,fy+5);
   doc.text(orc.paciente_nome||'Paciente',114,fy+10);
-
-  // Data aceite
   fy+=18;
   doc.text('Data: ___/___/______',14,fy);
   doc.text('Data: ___/___/______',114,fy);
 
   // Footer
-  doc.setFillColor(...corEsc);
+  doc.setFillColor(26,18,8);
   doc.rect(0,283,210,14,'F');
   doc.setTextColor(255,255,255);
   doc.setFontSize(7);
@@ -608,9 +394,6 @@ async function gerarPDF(){
 
 document.getElementById('modal-novo').addEventListener('click',e=>{if(e.target===e.currentTarget)fecharNovo();});
 document.getElementById('modal-baixa').addEventListener('click',e=>{if(e.target===e.currentTarget)fecharBaixa();});
-document.getElementById('modal-pdf').addEventListener('click',e=>{if(e.target===e.currentTarget)fecharPDF();});
-
-// Adicionar campo odontograma no backend ao salvar
 carregar();
 </script>
 </body>
