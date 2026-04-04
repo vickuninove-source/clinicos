@@ -825,83 +825,169 @@ function buildPDFContent(orc,itens){
 
 async function gerarPDF(){
   const orc=window._pdfOrc;
-  if(!orc){alert('Erro: orçamento não encontrado');return;}
+  if(!orc){alert('Erro: orcamento nao encontrado');return;}
   const itens=window._pdfItens||[];
   const {jsPDF}=window.jspdf;
-  const doc=new jsPDF();
+  const doc=new jsPDF('p','mm','a4');
 
-  // Header
-  doc.setFillColor(193,113,79);
-  doc.rect(0,0,210,38,'F');
+  const corAcc=[193,113,79];
+  const corEsc=[26,18,8];
+  const corCin=[120,90,70];
+  const corBge=[245,241,236];
+
+  // Header fundo
+  doc.setFillColor(...corAcc);
+  doc.rect(0,0,210,35,'F');
+
+  // Logo texto
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(18);
   doc.setTextColor(255,255,255);
-  doc.setFontSize(20);doc.setFont('helvetica','bold');
-  doc.text('ClinicOS',14,16);
-  doc.setFontSize(10);doc.setFont('helvetica','normal');
-  doc.text('Orçamento Profissional',14,24);
-  doc.text('Nº '+String(orc.id).padStart(4,'0'),14,31);
-  doc.setFontSize(11);doc.setFont('helvetica','bold');
-  doc.text(clinica.nome||'Clínica',196,16,{align:'right'});
-  doc.setFont('helvetica','normal');doc.setFontSize(9);
-  doc.text(clinica.especialidade||'',196,23,{align:'right'});
-  doc.text(new Date().toLocaleDateString('pt-BR'),196,30,{align:'right'});
+  doc.text('ClinicOS',14,14);
 
-  // Paciente
-  doc.setTextColor(26,18,8);
-  doc.setFillColor(245,241,236);
-  doc.rect(14,44,182,18,'F');
-  doc.setFontSize(9);doc.setTextColor(156,128,112);doc.setFont('helvetica','bold');
-  doc.text('PACIENTE',18,51);
-  doc.setTextColor(26,18,8);doc.setFont('helvetica','normal');doc.setFontSize(12);
-  doc.text(orc.paciente_nome||'—',18,59);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9);
+  doc.text('Orcamento Profissional',14,21);
+  doc.text('No. '+String(orc.id).padStart(4,'0'),14,27);
 
-  // Itens
+  // Clinica info (direita)
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(11);
+  doc.text(clinica.nome||'Clinica',196,13,{align:'right'});
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9);
+  if(clinica.especialidade) doc.text(clinica.especialidade,196,20,{align:'right'});
+  doc.text(new Date().toLocaleDateString('pt-BR'),196,27,{align:'right'});
+
+  // Paciente box
+  doc.setFillColor(...corBge);
+  doc.rect(14,40,182,16,'F');
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(8);
+  doc.setTextColor(...corCin);
+  doc.text('PACIENTE',18,47);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(12);
+  doc.setTextColor(...corEsc);
+  doc.text(orc.paciente_nome||'—',18,54);
+
+  // Descricao
+  let curY=62;
+  if(orc.descricao){
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(8);
+    doc.setTextColor(...corCin);
+    doc.text('DESCRICAO',14,curY);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(10);
+    doc.setTextColor(...corEsc);
+    doc.text(orc.descricao,14,curY+6);
+    curY+=14;
+  }
+
+  // Tabela de itens
   const tableData=itens.map(i=>[
     i.descricao||'—',
     String(i.quantidade||1),
-    'R$ '+parseFloat(i.valor_unitario||0).toFixed(2).replace('.',','),
-    'R$ '+parseFloat(i.valor_total||0).toFixed(2).replace('.',',')
+    'R$'+parseFloat(i.valor_unitario||0).toFixed(2).replace('.',','),
+    'R$'+parseFloat(i.valor_total||0).toFixed(2).replace('.',',')
   ]);
 
   doc.autoTable({
-    startY:68,
-    head:[['Procedimento / Item','Qtd','Valor Unit.','Total']],
-    body:tableData.length?tableData:[['Nenhum item','—','—','—']],
-    theme:'grid',
-    headStyles:{fillColor:[193,113,79],textColor:255,fontStyle:'bold',fontSize:10},
-    bodyStyles:{fontSize:10,textColor:[26,18,8]},
-    alternateRowStyles:{fillColor:[250,248,245]},
-    columnStyles:{0:{cellWidth:90},1:{cellWidth:20,halign:'center'},2:{cellWidth:35,halign:'right'},3:{cellWidth:35,halign:'right'}},
+    startY:curY+2,
+    head:[['Procedimento/Item','Qtd','Unit.','Total']],
+    body:tableData.length?tableData:[['Nenhum item cadastrado','1','R$0,00','R$0,00']],
+    theme:'striped',
+    headStyles:{fillColor:corAcc,textColor:[255,255,255],fontStyle:'bold',fontSize:9,cellPadding:4},
+    bodyStyles:{fontSize:9,textColor:corEsc,cellPadding:3},
+    alternateRowStyles:{fillColor:[250,247,244]},
+    columnStyles:{0:{cellWidth:88},1:{cellWidth:18,halign:'center'},2:{cellWidth:36,halign:'right'},3:{cellWidth:36,halign:'right'}},
     margin:{left:14,right:14},
   });
 
-  const fy=doc.lastAutoTable.finalY+8;
+  let fy=doc.lastAutoTable.finalY+6;
+
+  // Totais
   const sub=parseFloat(orc.valor_total||0);
   const desc=parseFloat(orc.valor_desconto||0);
   const total=parseFloat(orc.valor_final||orc.valor_total||0);
   const pct=parseFloat(orc.desconto_percentual||0);
+  const altTot=pct>0?26:14;
 
-  doc.setFillColor(245,241,236);
-  doc.rect(120,fy,76,pct>0?28:14,'F');
-  doc.setFontSize(10);doc.setTextColor(156,128,112);
-  doc.text('Subtotal:',124,fy+8);
-  doc.setTextColor(26,18,8);
-  doc.text('R$ '+sub.toFixed(2).replace('.',','),193,fy+8,{align:'right'});
+  doc.setFillColor(...corBge);
+  doc.rect(118,fy,78,altTot,'F');
+  doc.setDrawColor(...corAcc);
+  doc.setLineWidth(0.3);
+  doc.rect(118,fy,78,altTot);
+
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9);
+  doc.setTextColor(...corCin);
+  doc.text('Subtotal:',122,fy+8);
+  doc.setTextColor(...corEsc);
+  doc.text('R$'+sub.toFixed(2).replace('.',','),193,fy+8,{align:'right'});
+
   if(pct>0){
-    doc.setTextColor(156,128,112);doc.text('Desconto ('+pct+'%):',124,fy+16);
-    doc.setTextColor(192,57,43);doc.text('- R$ '+desc.toFixed(2).replace('.',','),193,fy+16,{align:'right'});
-    doc.setFontSize(12);doc.setFont('helvetica','bold');doc.setTextColor(193,113,79);
-    doc.text('TOTAL:',124,fy+26);doc.text('R$ '+total.toFixed(2).replace('.',','),193,fy+26,{align:'right'});
-  }else{
-    doc.setFontSize(12);doc.setFont('helvetica','bold');doc.setTextColor(193,113,79);
-    doc.text('TOTAL:',124,fy+8);doc.text('R$ '+total.toFixed(2).replace('.',','),193,fy+8,{align:'right'});
+    doc.setTextColor(...corCin);
+    doc.text('Desconto ('+pct+'%):',122,fy+16);
+    doc.setTextColor(192,57,43);
+    doc.text('-R$'+desc.toFixed(2).replace('.',','),193,fy+16,{align:'right'});
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(11);
+    doc.setTextColor(...corAcc);
+    doc.text('TOTAL:',122,fy+25);
+    doc.text('R$'+total.toFixed(2).replace('.',','),193,fy+25,{align:'right'});
+  } else {
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(11);
+    doc.setTextColor(...corAcc);
+    doc.text('TOTAL:',122,fy+8);
+    doc.text('R$'+total.toFixed(2).replace('.',','),193,fy+8,{align:'right'});
   }
 
-  // Footer
-  doc.setFillColor(26,18,8);doc.rect(0,282,210,15,'F');
-  doc.setTextColor(255,255,255);doc.setFontSize(8);doc.setFont('helvetica','normal');
-  doc.text('Documento gerado pelo ClinicOS — Sistema de Gestão Clínica',105,290,{align:'center'});
+  // Validade e observacoes
+  fy=fy+altTot+8;
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8);
+  doc.setTextColor(...corCin);
+  if(orc.validade) doc.text('Validade: '+new Date(orc.validade).toLocaleDateString('pt-BR'),14,fy);
+  if(orc.observacoes){
+    fy+=6;
+    doc.text('Obs: '+orc.observacoes,14,fy);
+  }
 
-  doc.save('orcamento-'+String(orc.id).padStart(4,'0')+'-'+(orc.paciente_nome||'paciente').replace(/\s/g,'-')+'.pdf');
+  // Assinaturas
+  fy=Math.max(fy+16,220);
+  doc.setDrawColor(...corCin);
+  doc.setLineWidth(0.4);
+
+  // Linha profissional
+  doc.line(14,fy,96,fy);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8);
+  doc.setTextColor(...corCin);
+  doc.text('Assinatura do Profissional',14,fy+5);
+  doc.text(clinica.nome||'Profissional',14,fy+10);
+
+  // Linha paciente
+  doc.line(114,fy,196,fy);
+  doc.text('Assinatura do Paciente',114,fy+5);
+  doc.text(orc.paciente_nome||'Paciente',114,fy+10);
+
+  // Data aceite
+  fy+=18;
+  doc.text('Data: ___/___/______',14,fy);
+  doc.text('Data: ___/___/______',114,fy);
+
+  // Footer
+  doc.setFillColor(...corEsc);
+  doc.rect(0,283,210,14,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(7);
+  doc.setFont('helvetica','normal');
+  doc.text('Documento gerado pelo ClinicOS - Sistema de Gestao Clinica',105,291,{align:'center'});
+
+  doc.save('orcamento-'+String(orc.id).padStart(4,'0')+'.pdf');
 }
 
 document.getElementById('modal-novo').addEventListener('click',e=>{if(e.target===e.currentTarget)fecharNovo();});
